@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
-import { TerminalWindow, WindowHeader, WindowBody, Dot, List, Prompt } from './TerminalComponents';
+import { TerminalWindow, WindowHeader, Dot, WindowBody, List, ListItem, Prompt } from './TerminalComponents';
 
 const ModalBackdrop = styled(motion.div)`
   position: fixed;
@@ -45,7 +45,7 @@ const DetailHeader = styled.div`
   border-bottom: 1px solid #0F0;
 `;
 
-const CloseButton = styled.button`
+const Close = styled.button`
   background: none;
   border: none;
   color: #0F0;
@@ -72,55 +72,82 @@ const DetailBody = styled.div`
   p {
     margin-bottom: 0.5rem;
   }
-`;
-
-const AboutItem = styled.li`
-  padding: 0.5rem 0;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
   
-  &:hover {
-    color: #fff;
-    text-shadow: 0 0 5px #0F0;
+  ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  li {
+    margin-bottom: 0.5rem;
+    position: relative;
     
-    span {
-      transform: translateX(5px);
+    &::before {
+      content: '>';
+      color: #0F0;
+      position: absolute;
+      left: -1.2rem;
     }
   }
   
-  span {
-    transition: transform 0.2s ease;
-    margin-left: 0.5rem;
+  .company {
+    color: #0F0;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  
+  .date {
+    color: #888;
+    font-size: 0.9em;
   }
 `;
 
-export const About: React.FC = () => {
+const Experience: React.FC = () => {
   const [showDetail, setShowDetail] = useState<string | null>(null);
   
-  const aboutItems = [
+  const experiences = [
     {
-      id: 'whoami',
-      title: 'Evan Kniffen',
-      subtitle: 'Senior SWE & Math Enthusiast',
-      description: 'I\'m a Senior SWE who crafts surreal UIs, solves crazy integrals, and builds quant pipelines.'
+      id: 'novvia',
+      company: 'Novvia Group',
+      role: 'Software Engineer',
+      date: '2023 - Present',
+      description: 'Full-stack development of enterprise applications',
+      details: [
+        'Developed and maintained internal tools and applications using modern web technologies',
+        'Collaborated with cross-functional teams to design and implement new features',
+        'Optimized application performance and improved user experience',
+        'Mentored junior developers and conducted code reviews'
+      ]
     },
     {
-      id: 'skills',
-      title: 'Technical Skills',
-      subtitle: 'TypeScript · React · Node · Python · SQL · Framer Motion',
-      description: 'I\'ve built full-stack apps in TS/React, data pipelines in Python, and optimized SQL queries at scale.'
+      id: 'approtec',
+      company: 'ApproTEC',
+      role: 'Software Developer',
+      date: '2021 - 2023',
+      description: 'Full-stack development for agricultural technology solutions',
+      details: [
+        'Designed and implemented responsive web applications for agricultural management',
+        'Integrated IoT devices with web platforms for real-time data monitoring',
+        'Developed RESTful APIs for data processing and analysis',
+        'Collaborated with agricultural experts to create user-friendly interfaces'
+      ]
     },
     {
-      id: 'passions',
-      title: 'Interests & Passions',
-      subtitle: 'Stochastic Calculus · Glitch Art · Digital Carnivals',
-      description: 'Outside code: I create glitch art, host digital carnivals, and read measure theory papers.'
+      id: 'nexustrade',
+      company: 'NexusTrade',
+      role: 'Frontend Developer',
+      date: '2020 - 2021',
+      description: 'Development of trading platform interfaces',
+      details: [
+        'Built interactive data visualization components for financial data',
+        'Implemented real-time updates using WebSockets',
+        'Optimized frontend performance for better user experience',
+        'Collaborated with UX designers to implement responsive designs'
+      ]
     }
   ];
 
-  const selectedItem = showDetail ? aboutItems.find(item => item.id === showDetail) : null;
+  const selectedExperience = showDetail ? experiences.find(exp => exp.id === showDetail) : null;
 
   return (
     <TerminalWindow as={motion.div} initial={{ x: -200, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}>
@@ -130,18 +157,18 @@ export const About: React.FC = () => {
         <Dot style={{ background: '#0f0' }}/>
       </WindowHeader>
       <WindowBody>
-        <Prompt>Kniff@tamu:~/about$</Prompt>{' '}
+        <Prompt>Kniff@tamu:~/experience$</Prompt>{' '}
         <Typewriter words={['ls -la']} cursor cursorStyle="_" typeSpeed={90} delaySpeed={1500} />
         <List>
-          {aboutItems.map((item) => (
-            <AboutItem key={item.id} onClick={() => setShowDetail(item.id)}>
-              <Prompt> &gt; {item.id}</Prompt> <span>{item.title} - {item.subtitle}</span>
-            </AboutItem>
+          {experiences.map((exp) => (
+            <ListItem key={exp.id} onClick={() => setShowDetail(exp.id)}>
+              <Prompt> &gt; {exp.id}</Prompt> <span>{exp.company} - {exp.role}</span>
+            </ListItem>
           ))}
         </List>
         
         <AnimatePresence>
-          {showDetail && selectedItem && (
+          {showDetail && selectedExperience && (
             <ModalBackdrop
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -160,7 +187,7 @@ export const About: React.FC = () => {
                 transition={{ duration: 0.2 }}
               >
               <DetailHeader>
-                <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
+                <Close onClick={() => setShowDetail(null)}>×</Close>
                 <div>
                   <Dot style={{ background: '#f00' }}/>
                   <Dot style={{ background: '#ff0' }}/>
@@ -168,9 +195,15 @@ export const About: React.FC = () => {
                 </div>
               </DetailHeader>
               <DetailBody>
-                <h3>{selectedItem.title}</h3>
-                <p>{selectedItem.subtitle}</p>
-                <p>{selectedItem.description}</p>
+                <h3><span className="company">{selectedExperience.company}</span> - {selectedExperience.role}</h3>
+                <p className="date">{selectedExperience.date}</p>
+                <p>{selectedExperience.description}</p>
+                <h3>Key Responsibilities:</h3>
+                <ul>
+                  {selectedExperience.details.map((detail, index) => (
+                    <li key={index}>{detail}</li>
+                  ))}
+                </ul>
               </DetailBody>
               </DetailModal>
             </ModalBackdrop>
@@ -180,3 +213,5 @@ export const About: React.FC = () => {
     </TerminalWindow>
   );
 };
+
+export default Experience;
