@@ -2,169 +2,431 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Evan Kniffen | kniff.world</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Evan Kniffen's personal website: portfolio, projects, contact.">
-  <link href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap" rel="stylesheet">
+  <title>Kniff World 🎠</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to Kniff World – Evan Kniffen's math, code, and chaos portfolio.">
+  <!-- Fun 90s/park fonts: -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #111215;
-      --fg: #e0e0e0;
-      --accent: #4db6ac;
-      --card: #181a1b;
-      --card-border: #262728;
-      --link: #77ffe6;
+      --bg: linear-gradient(135deg, #3e39d0 0%, #f336e9 100%);
+      --bg-overlay: rgba(255,255,255,0.07);
+      --panel: #fff8e7;
+      --nav: #ffc700;
+      --nav-text: #301571;
+      --nav-accent: #f336e9;
+      --accent: #11e5c0;
+      --shadow: 0 4px 24px 0 #0014;
+      --card-radius: 22px;
+      --card-shadow: 0 3px 18px #0002;
+      --heading-font: 'Fredoka One', cursive;
+      --body-font: 'Open Sans', Arial, sans-serif;
     }
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
       padding: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
-      letter-spacing: 0.01em;
+      background: var(--bg);
+      font-family: var(--body-font);
+      color: #19141d;
+      overflow-x: hidden;
+      position: relative;
     }
-    .container {
-      max-width: 750px;
-      margin: 48px auto 0 auto;
-      padding: 32px 24px;
-      background: var(--card);
-      border-radius: 18px;
-      border: 1.5px solid var(--card-border);
-      box-shadow: 0 3px 16px 0 #0002;
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: repeating-linear-gradient(
+        45deg, 
+        transparent, transparent 36px,
+        #fff2 37px, #fff2 39px,
+        transparent 40px, transparent 75px
+      );
+      pointer-events: none;
+      opacity: 0.5;
     }
-    h1 {
-      font-size: 2.6rem;
-      margin-bottom: 0.2em;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+    header {
+      background: var(--nav);
+      color: var(--nav-text);
+      padding: 1.3em 0 1.1em 0;
+      box-shadow: var(--shadow);
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-    .tagline {
-      font-size: 1.18rem;
-      color: var(--accent);
-      font-weight: 500;
-      margin-bottom: 1.2em;
-      letter-spacing: 0.04em;
+    header h1 {
+      font-family: var(--heading-font);
+      font-size: 2.4rem;
+      letter-spacing: 0.05em;
+      margin: 0;
+      text-shadow: 2px 3px 0 #fff9, 0 2px 8px #f336e990;
+      display: inline-block;
+      vertical-align: middle;
+      padding-right: 0.3em;
+    }
+    .marquee {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+      color: var(--nav-accent);
+      font-weight: bold;
+      font-size: 1.04em;
+      margin-bottom: -10px;
+      margin-top: 8px;
+      font-family: var(--heading-font);
+      animation: marquee 16s linear infinite;
+      text-shadow: 1px 2px #fff5;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(100%);}
+      100% {transform: translateX(-100%);}
     }
     nav {
-      margin: 2em 0 2em 0;
       display: flex;
-      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 0.6em;
     }
     nav a {
       text-decoration: none;
-      color: var(--link);
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      transition: color 0.2s;
+      background: var(--nav-accent);
+      color: #fff;
+      font-family: var(--heading-font);
+      font-size: 1.09em;
+      padding: 10px 22px;
+      border-radius: 16px;
+      margin: 3px 2px;
+      box-shadow: 0 2px 7px #0002;
+      transition: transform 0.13s, box-shadow 0.13s, background 0.22s;
+      letter-spacing: 0.02em;
+      border: 2px solid #fff;
+      outline: none;
     }
-    nav a:hover {
-      color: var(--accent);
+    nav a:hover, nav a:focus {
+      background: var(--accent);
+      color: #2a144a;
+      transform: scale(1.08) rotate(-1deg);
+      box-shadow: 0 3px 18px #11e5c090;
+    }
+    main {
+      max-width: 1040px;
+      margin: 36px auto 0 auto;
+      padding: 26px 8vw 60px 8vw;
+      position: relative;
+      z-index: 2;
     }
     section {
-      margin-bottom: 2.3em;
+      background: var(--panel);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 2.1em 2.3em 1.3em 2.3em;
+      margin-bottom: 2.2em;
+      position: relative;
     }
-    .projects-list {
+    section h2 {
+      font-family: var(--heading-font);
+      color: var(--nav-accent);
+      font-size: 2.1em;
+      margin-top: 0;
+      margin-bottom: 0.25em;
+      letter-spacing: 0.04em;
+      text-shadow: 1px 2px #fff7, 0 2px 12px #4af2ef44;
+    }
+    .section-desc {
+      color: #374151;
+      font-size: 1.12em;
+      margin-bottom: 0.9em;
+    }
+    /* Fun callouts for sections */
+    .ride-label {
+      font-size: 1em;
+      background: var(--nav-accent);
+      color: #fff;
+      font-family: var(--heading-font);
+      display: inline-block;
+      border-radius: 12px;
+      padding: 3px 16px;
+      box-shadow: 0 1px 5px #f336e955;
+      margin-bottom: 0.7em;
+      letter-spacing: 0.01em;
+      vertical-align: middle;
+    }
+    /* Projects Carousel */
+    .projects-carousel {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
+      gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-top: 1.5em;
     }
     .project-card {
-      background: #1d2023;
-      border: 1.2px solid #222325;
-      border-radius: 10px;
-      padding: 18px 22px;
-      transition: box-shadow 0.18s;
+      background: #ffe3f7;
+      border: 2px solid #f336e9;
+      border-radius: 17px;
+      padding: 1.1em 1.3em 1em 1.3em;
+      box-shadow: 0 2px 10px #f336e925;
+      transition: transform 0.12s, box-shadow 0.14s;
+      min-height: 140px;
     }
     .project-card:hover {
-      box-shadow: 0 4px 22px 0 #22ffd444;
+      transform: scale(1.04) rotate(-2deg);
+      box-shadow: 0 8px 30px #4af2ef66;
     }
     .project-title {
-      margin: 0 0 0.2em 0;
-      font-size: 1.18rem;
-      color: var(--link);
+      font-family: var(--heading-font);
+      color: #c5007c;
+      font-size: 1.19em;
+      margin: 0 0 0.25em 0;
     }
     .project-desc {
-      color: #bbb;
-      font-size: 1rem;
-      margin-bottom: 0;
-      line-height: 1.45;
-    }
-    .about-text {
-      font-size: 1.08rem;
-      color: #ccc;
-      line-height: 1.7;
+      font-size: 1em;
+      color: #341a38;
       margin-bottom: 0.2em;
     }
-    .contact-links {
-      margin-top: 1.2em;
-      display: flex;
-      gap: 18px;
-    }
-    .contact-links a {
-      color: var(--link);
+    .project-links a {
       text-decoration: none;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      transition: color 0.2s;
+      color: #0db9ac;
+      font-weight: bold;
+      margin-right: 13px;
+      transition: color 0.17s;
     }
-    .contact-links a:hover {
-      color: var(--accent);
+    .project-links a:hover {
+      color: #f336e9;
     }
-    @media (max-width: 540px) {
-      .container { padding: 14px 5vw; }
-      h1 { font-size: 2.0rem; }
+    /* Coding Languages and Tools */
+    .coding-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 1.2em;
+    }
+    .lang-badge {
+      font-family: var(--heading-font);
+      background: #11e5c0;
+      color: #19141d;
+      padding: 7px 17px;
+      font-size: 1em;
+      border-radius: 14px;
+      margin-bottom: 4px;
+      box-shadow: 0 1px 8px #0db9ac33;
+      border: 2px solid #fff;
+      transition: background 0.13s, color 0.13s;
+    }
+    .lang-badge:hover {
+      background: #f336e9;
+      color: #fff;
+    }
+    /* Math section */
+    .math-content {
+      font-size: 1.08em;
+      color: #3e2184;
+      margin-bottom: 0.7em;
+      line-height: 1.7;
+      font-family: 'Open Sans', Arial, sans-serif;
+    }
+    /* Coursework */
+    .coursework-list {
+      columns: 2;
+      max-width: 540px;
+      margin: 1em 0 0 0;
+      font-size: 1em;
+      color: #1a1a33;
+      padding-left: 1em;
+    }
+    .coursework-list li {
+      margin-bottom: 0.42em;
+    }
+    /* Competitions & Work */
+    .competition-list, .work-list {
+      margin: 0.7em 0 0 0;
+      font-size: 1.06em;
+      color: #42217b;
+      padding-left: 1.2em;
+    }
+    .competition-list li, .work-list li {
+      margin-bottom: 0.5em;
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      font-family: var(--heading-font);
+      color: #fff;
+      font-size: 1.08em;
+      background: #341a87;
+      padding: 1.4em 0 1.7em 0;
+      letter-spacing: 0.01em;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      box-shadow: 0 -4px 28px #3e39d050;
+      margin-top: 1.6em;
+      position: relative;
+      z-index: 2;
+    }
+    .footer-socials a {
+      color: #11e5c0;
+      text-decoration: none;
+      margin: 0 11px;
+      font-size: 1.1em;
+      transition: color 0.18s;
+    }
+    .footer-socials a:hover {
+      color: #f336e9;
+    }
+    @media (max-width: 730px) {
+      main {padding: 13px 2vw;}
+      section {padding: 1.3em 0.9em;}
+      header h1 {font-size: 1.32em;}
+      nav a {padding: 8px 7vw;}
+      .projects-carousel {grid-template-columns: 1fr;}
+      .coursework-list {columns: 1;}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Evan Kniffen</h1>
-    <div class="tagline">math • code • data • slightly cursed lore</div>
+  <div class="bg-overlay"></div>
+  <header>
+    <h1>🎠 Kniff World</h1>
+    <div class="marquee">✨ Welcome to the most cursed (yet mathematically rigorous) theme park on the internet! ✨</div>
     <nav>
       <a href="#projects">Projects</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+      <a href="#coding">Coding</a>
+      <a href="#math">Math</a>
+      <a href="#coursework">Coursework</a>
+      <a href="#competitions">Competitions</a>
+      <a href="#work">Work</a>
     </nav>
-
+  </header>
+  <main>
     <section id="projects">
-      <h2 style="margin-bottom:0.5em;">Projects</h2>
-      <ul class="projects-list">
-        <li class="project-card">
-          <div class="project-title"><a href="https://github.com/yourusername/project1" target="_blank">Project Name 1</a></div>
-          <div class="project-desc">Short description of what this project does, why it's cool, tech stack, etc.</div>
-        </li>
-        <li class="project-card">
-          <div class="project-title"><a href="https://github.com/yourusername/project2" target="_blank">Project Name 2</a></div>
-          <div class="project-desc">Another project—explain it in one or two lines. Replace or add more as needed.</div>
-        </li>
-        <!-- Add more project cards as needed -->
+      <span class="ride-label">🎢 Current Projects</span>
+      <h2>Projects</h2>
+      <div class="section-desc">Stuff I'm currently building, breaking, or optimizing:</div>
+      <div class="projects-carousel">
+        <div class="project-card">
+          <div class="project-title">Windsurf Portfolio Engine</div>
+          <div class="project-desc">A personal website generator and portfolio CMS built with the Windsurf IDE. Theme park mode enabled for maximal irony.</div>
+          <div class="project-links">
+            <a href="https://github.com/evankniffen/kniff.world" target="_blank">GitHub</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-title">Quantitative Meme Analyzer</div>
+          <div class="project-desc">Python pipeline for meme classification, sentiment, and cross-platform virality analysis using transformers and scikit-learn.</div>
+          <div class="project-links">
+            <a href="#" target="_blank">GitHub</a>
+            <a href="#" target="_blank">Live Demo</a>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-title">Stochastic Integral Explorer</div>
+          <div class="project-desc">Interactive tool to visualize Itô integrals, Brownian motion, and martingale processes in the browser. Powered by D3.js and WebGL.</div>
+          <div class="project-links">
+            <a href="#" target="_blank">GitHub</a>
+          </div>
+        </div>
+        <!-- Add more project-cards as you like! -->
+      </div>
+    </section>
+
+    <section id="coding">
+      <span class="ride-label">🛠️ Coding Languages & Tools</span>
+      <h2>Coding</h2>
+      <div class="section-desc">Languages, frameworks, and tech I can bend to my will:</div>
+      <div class="coding-list">
+        <span class="lang-badge">Python</span>
+        <span class="lang-badge">JavaScript</span>
+        <span class="lang-badge">C++</span>
+        <span class="lang-badge">R</span>
+        <span class="lang-badge">HTML5</span>
+        <span class="lang-badge">CSS3</span>
+        <span class="lang-badge">React</span>
+        <span class="lang-badge">D3.js</span>
+        <span class="lang-badge">LaTeX</span>
+        <span class="lang-badge">SQL</span>
+        <span class="lang-badge">Pandas</span>
+        <span class="lang-badge">TensorFlow</span>
+        <span class="lang-badge">PyTorch</span>
+        <!-- Add or remove badges as needed -->
+      </div>
+    </section>
+
+    <section id="math">
+      <span class="ride-label">🧮 Math</span>
+      <h2>Math</h2>
+      <div class="section-desc">A few obsessions: measure theory, stochastic calculus, cursed integrals, and beautiful proofs.</div>
+      <div class="math-content">
+        <b>Favorite Theorem:</b> <em>“The only way to prove you can solve integrals nobody else can is to post about them on your personal website.”</em><br>
+        <ul>
+          <li>Itô & Stratonovich calculus, stochastic processes</li>
+          <li>Measure-theoretic probability, martingales</li>
+          <li>Real/complex analysis, functional equations</li>
+          <li>Fractal geometry & chaos theory</li>
+          <li>Experimental math: numerical methods & computer algebra</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="coursework">
+      <span class="ride-label">📚 Coursework</span>
+      <h2>Coursework</h2>
+      <div class="section-desc">Selected university courses and independent study:</div>
+      <ul class="coursework-list">
+        <li>Stochastic Calculus</li>
+        <li>Real & Complex Analysis</li>
+        <li>Numerical Methods for Finance</li>
+        <li>Modern Algebra</li>
+        <li>Partial Differential Equations</li>
+        <li>Measure Theory</li>
+        <li>Machine Learning</li>
+        <li>Statistical Inference</li>
+        <li>Financial Engineering</li>
+        <li>Data Visualization</li>
+        <li>Mathematical Modeling</li>
+        <li>Advanced Python Programming</li>
+        <!-- Add more! -->
       </ul>
     </section>
 
-    <section id="about">
-      <h2>About</h2>
-      <div class="about-text">
-        Data scientist, quant, and math enjoyer.<br>
-        Enjoys high-effort memes, stochastic calculus, and writing over-complicated integrals for fun.<br>
-        Currently seeking: challenges, collaborations, and cool math puzzles.<br>
-        <br>
-        <em>Feel free to connect if you want to talk code, research, or meme economics.</em>
-      </div>
+    <section id="competitions">
+      <span class="ride-label">🏆 Competitions</span>
+      <h2>Competitions</h2>
+      <div class="section-desc">Stuff I’ve tried to win or chaos I’ve entered:</div>
+      <ul class="competition-list">
+        <li>Putnam Mathematical Competition (Top 10%)</li>
+        <li>Mathematical Contest in Modeling (MCM) – Meritorious Winner</li>
+        <li>ACM ICPC Regionals (Team Lead)</li>
+        <li>DataFest Analytics Challenge – 1st Place</li>
+        <li>Kaggle Competitions (Titanic, House Prices, etc.)</li>
+        <li>National Math Olympiad Finalist</li>
+        <!-- Add your own! -->
+      </ul>
     </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <div class="contact-links">
-        <a href="mailto:your@email.com">Email</a>
-        <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-        <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
-      </div>
+    <section id="work">
+      <span class="ride-label">💼 Work Experience</span>
+      <h2>Work</h2>
+      <div class="section-desc">A few of my favorite gigs and jobs:</div>
+      <ul class="work-list">
+        <li>Quantitative Analyst Intern – Capital Group</li>
+        <li>Research Assistant – Department of Mathematics, TAMU</li>
+        <li>Data Science Fellow – Center for Applied Data Analytics</li>
+        <li>Software Developer – Freelance/Contract</li>
+        <!-- Add more work/roles here! -->
+      </ul>
     </section>
-  </div>
+  </main>
+  <footer>
+    <div>🎡 <b>Kniff World</b> | Where every project is a ride 🎢</div>
+    <div class="footer-socials">
+      <a href="mailto:evan.kniffen2@gmail.com">Email</a>
+      <a href="https://github.com/evankniffen" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/evankniffen" target="_blank">LinkedIn</a>
+    </div>
+    <div style="font-size:0.98em; color:#baffee; margin-top:0.5em;">&copy; 2025 Evan Kniffen</div>
+  </footer>
 </body>
 </html>
