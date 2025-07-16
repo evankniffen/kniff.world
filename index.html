@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Evan Kniffen | kniff.world</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Evan Kniffen's personal website: portfolio, projects, contact.">
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #111215;
+      --fg: #e0e0e0;
+      --accent: #4db6ac;
+      --card: #181a1b;
+      --card-border: #262728;
+      --link: #77ffe6;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      letter-spacing: 0.01em;
+    }
+    .container {
+      max-width: 750px;
+      margin: 48px auto 0 auto;
+      padding: 32px 24px;
+      background: var(--card);
+      border-radius: 18px;
+      border: 1.5px solid var(--card-border);
+      box-shadow: 0 3px 16px 0 #0002;
+    }
+    h1 {
+      font-size: 2.6rem;
+      margin-bottom: 0.2em;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .tagline {
+      font-size: 1.18rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 1.2em;
+      letter-spacing: 0.04em;
+    }
+    nav {
+      margin: 2em 0 2em 0;
+      display: flex;
+      gap: 28px;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--link);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    section {
+      margin-bottom: 2.3em;
+    }
+    .projects-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .project-card {
+      background: #1d2023;
+      border: 1.2px solid #222325;
+      border-radius: 10px;
+      padding: 18px 22px;
+      transition: box-shadow 0.18s;
+    }
+    .project-card:hover {
+      box-shadow: 0 4px 22px 0 #22ffd444;
+    }
+    .project-title {
+      margin: 0 0 0.2em 0;
+      font-size: 1.18rem;
+      color: var(--link);
+    }
+    .project-desc {
+      color: #bbb;
+      font-size: 1rem;
+      margin-bottom: 0;
+      line-height: 1.45;
+    }
+    .about-text {
+      font-size: 1.08rem;
+      color: #ccc;
+      line-height: 1.7;
+      margin-bottom: 0.2em;
+    }
+    .contact-links {
+      margin-top: 1.2em;
+      display: flex;
+      gap: 18px;
+    }
+    .contact-links a {
+      color: var(--link);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .contact-links a:hover {
+      color: var(--accent);
+    }
+    @media (max-width: 540px) {
+      .container { padding: 14px 5vw; }
+      h1 { font-size: 2.0rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Evan Kniffen</h1>
+    <div class="tagline">math • code • data • slightly cursed lore</div>
+    <nav>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <section id="projects">
+      <h2 style="margin-bottom:0.5em;">Projects</h2>
+      <ul class="projects-list">
+        <li class="project-card">
+          <div class="project-title"><a href="https://github.com/yourusername/project1" target="_blank">Project Name 1</a></div>
+          <div class="project-desc">Short description of what this project does, why it's cool, tech stack, etc.</div>
+        </li>
+        <li class="project-card">
+          <div class="project-title"><a href="https://github.com/yourusername/project2" target="_blank">Project Name 2</a></div>
+          <div class="project-desc">Another project—explain it in one or two lines. Replace or add more as needed.</div>
+        </li>
+        <!-- Add more project cards as needed -->
+      </ul>
+    </section>
+
+    <section id="about">
+      <h2>About</h2>
+      <div class="about-text">
+        Data scientist, quant, and math enjoyer.<br>
+        Enjoys high-effort memes, stochastic calculus, and writing over-complicated integrals for fun.<br>
+        Currently seeking: challenges, collaborations, and cool math puzzles.<br>
+        <br>
+        <em>Feel free to connect if you want to talk code, research, or meme economics.</em>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2>Contact</h2>
+      <div class="contact-links">
+        <a href="mailto:your@email.com">Email</a>
+        <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
