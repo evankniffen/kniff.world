@@ -2,431 +2,221 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kniff World 🎠</title>
+  <title>Kniff World | Digital Funhouse</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Welcome to Kniff World – Evan Kniffen's math, code, and chaos portfolio.">
-  <!-- Fun 90s/park fonts: -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Kniff World – a digital park of math, code, and creative chaos.">
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: linear-gradient(135deg, #3e39d0 0%, #f336e9 100%);
-      --bg-overlay: rgba(255,255,255,0.07);
-      --panel: #fff8e7;
-      --nav: #ffc700;
-      --nav-text: #301571;
-      --nav-accent: #f336e9;
-      --accent: #11e5c0;
-      --shadow: 0 4px 24px 0 #0014;
-      --card-radius: 22px;
-      --card-shadow: 0 3px 18px #0002;
-      --heading-font: 'Fredoka One', cursive;
-      --body-font: 'Open Sans', Arial, sans-serif;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: var(--bg);
-      font-family: var(--body-font);
-      color: #19141d;
-      overflow-x: hidden;
+    html, body { margin:0; padding:0; background: #1d003b; min-height:100vh; font-family:'Open Sans',Arial,sans-serif; overflow-x:hidden;}
+    body { position: relative; }
+    /* Park map container */
+    .park-map-container {
+      width: 100vw; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
       position: relative;
-    }
-    .bg-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background: repeating-linear-gradient(
-        45deg, 
-        transparent, transparent 36px,
-        #fff2 37px, #fff2 39px,
-        transparent 40px, transparent 75px
-      );
-      pointer-events: none;
-      opacity: 0.5;
-    }
-    header {
-      background: var(--nav);
-      color: var(--nav-text);
-      padding: 1.3em 0 1.1em 0;
-      box-shadow: var(--shadow);
-      border-bottom-left-radius: 18px;
-      border-bottom-right-radius: 18px;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    header h1 {
-      font-family: var(--heading-font);
-      font-size: 2.4rem;
-      letter-spacing: 0.05em;
-      margin: 0;
-      text-shadow: 2px 3px 0 #fff9, 0 2px 8px #f336e990;
-      display: inline-block;
-      vertical-align: middle;
-      padding-right: 0.3em;
-    }
-    .marquee {
-      width: 100%;
+      z-index: 2;
+      background: radial-gradient(ellipse at 60% 60%, #36006b 50%, #1d003b 100%);
       overflow: hidden;
-      white-space: nowrap;
-      box-sizing: border-box;
-      color: var(--nav-accent);
-      font-weight: bold;
-      font-size: 1.04em;
-      margin-bottom: -10px;
-      margin-top: 8px;
-      font-family: var(--heading-font);
-      animation: marquee 16s linear infinite;
-      text-shadow: 1px 2px #fff5;
     }
-    @keyframes marquee {
-      0% { transform: translateX(100%);}
-      100% {transform: translateX(-100%);}
-    }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 18px;
-      margin-top: 0.6em;
-    }
-    nav a {
-      text-decoration: none;
-      background: var(--nav-accent);
-      color: #fff;
-      font-family: var(--heading-font);
-      font-size: 1.09em;
-      padding: 10px 22px;
-      border-radius: 16px;
-      margin: 3px 2px;
-      box-shadow: 0 2px 7px #0002;
-      transition: transform 0.13s, box-shadow 0.13s, background 0.22s;
-      letter-spacing: 0.02em;
-      border: 2px solid #fff;
-      outline: none;
-    }
-    nav a:hover, nav a:focus {
-      background: var(--accent);
-      color: #2a144a;
-      transform: scale(1.08) rotate(-1deg);
-      box-shadow: 0 3px 18px #11e5c090;
-    }
-    main {
-      max-width: 1040px;
-      margin: 36px auto 0 auto;
-      padding: 26px 8vw 60px 8vw;
-      position: relative;
+    .park-map-svg {
+      width: 95vw; max-width: 920px;
+      height: 70vh; min-height: 440px; max-height: 560px;
+      background: none;
+      display: block;
+      margin: auto;
+      user-select: none;
       z-index: 2;
+      filter: drop-shadow(0 8px 60px #ff2af633);
     }
-    section {
-      background: var(--panel);
-      border-radius: var(--card-radius);
-      box-shadow: var(--card-shadow);
-      padding: 2.1em 2.3em 1.3em 2.3em;
-      margin-bottom: 2.2em;
+    /* Hotspot zones */
+    .zone { cursor: pointer; transition: filter 0.15s, opacity 0.12s; opacity: 0.89;}
+    .zone:hover, .zone:focus { filter: brightness(1.23) drop-shadow(0 0 18px #fffdc8); opacity: 1; }
+    /* Mascot! */
+    .mascot-holder {
+      position: fixed; right: 3vw; bottom: 2vw; z-index: 10;
+      display: flex; align-items: flex-end; flex-direction: column;
+      pointer-events: none;
+    }
+    .mascot-img {
+      width: 90px; height: 90px;
+      border-radius: 25% 35% 35% 30%/40% 32% 45% 36%;
+      filter: drop-shadow(0 0 20px #ff2af655);
+      background: #fff;
+      box-shadow: 0 2px 18px #3419ba22;
+      pointer-events: auto;
+    }
+    .mascot-bubble {
+      background: #fff9b7; color: #391b47;
+      font-family: 'Luckiest Guy', cursive;
+      font-size: 1.14em; padding: 0.75em 1.3em;
+      border-radius: 16px 18px 22px 8px/18px 16px 17px 22px;
+      box-shadow: 0 4px 22px #ffe25c85;
+      margin-bottom: 8px;
+      margin-right: 14px;
+      animation: popIn 1.7s cubic-bezier(.46,1.56,.39,.95);
       position: relative;
     }
-    section h2 {
-      font-family: var(--heading-font);
-      color: var(--nav-accent);
-      font-size: 2.1em;
-      margin-top: 0;
-      margin-bottom: 0.25em;
-      letter-spacing: 0.04em;
-      text-shadow: 1px 2px #fff7, 0 2px 12px #4af2ef44;
+    @keyframes popIn {
+      0% { opacity:0; transform:scale(0.8) translateY(35px);}
+      60%{ opacity:0.9; }
+      100%{ opacity:1; transform:scale(1) translateY(0);}
     }
-    .section-desc {
-      color: #374151;
-      font-size: 1.12em;
-      margin-bottom: 0.9em;
+    /* Section overlays */
+    .section-modal {
+      position: fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(33,7,69,0.97);
+      z-index: 1000; display: flex; align-items: center; justify-content: center;
+      animation: fadeInSection 1.2s cubic-bezier(.47,1.64,.41,.8);
     }
-    /* Fun callouts for sections */
-    .ride-label {
-      font-size: 1em;
-      background: var(--nav-accent);
-      color: #fff;
-      font-family: var(--heading-font);
-      display: inline-block;
-      border-radius: 12px;
-      padding: 3px 16px;
-      box-shadow: 0 1px 5px #f336e955;
-      margin-bottom: 0.7em;
-      letter-spacing: 0.01em;
-      vertical-align: middle;
+    @keyframes fadeInSection {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
-    /* Projects Carousel */
-    .projects-carousel {
-      display: grid;
-      gap: 22px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      margin-top: 1.5em;
-    }
-    .project-card {
-      background: #ffe3f7;
-      border: 2px solid #f336e9;
-      border-radius: 17px;
-      padding: 1.1em 1.3em 1em 1.3em;
-      box-shadow: 0 2px 10px #f336e925;
-      transition: transform 0.12s, box-shadow 0.14s;
-      min-height: 140px;
-    }
-    .project-card:hover {
-      transform: scale(1.04) rotate(-2deg);
-      box-shadow: 0 8px 30px #4af2ef66;
-    }
-    .project-title {
-      font-family: var(--heading-font);
-      color: #c5007c;
-      font-size: 1.19em;
-      margin: 0 0 0.25em 0;
-    }
-    .project-desc {
-      font-size: 1em;
-      color: #341a38;
-      margin-bottom: 0.2em;
-    }
-    .project-links a {
-      text-decoration: none;
-      color: #0db9ac;
-      font-weight: bold;
-      margin-right: 13px;
-      transition: color 0.17s;
-    }
-    .project-links a:hover {
-      color: #f336e9;
-    }
-    /* Coding Languages and Tools */
-    .coding-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-top: 1.2em;
-    }
-    .lang-badge {
-      font-family: var(--heading-font);
-      background: #11e5c0;
-      color: #19141d;
-      padding: 7px 17px;
-      font-size: 1em;
-      border-radius: 14px;
-      margin-bottom: 4px;
-      box-shadow: 0 1px 8px #0db9ac33;
-      border: 2px solid #fff;
-      transition: background 0.13s, color 0.13s;
-    }
-    .lang-badge:hover {
-      background: #f336e9;
-      color: #fff;
-    }
-    /* Math section */
-    .math-content {
-      font-size: 1.08em;
-      color: #3e2184;
-      margin-bottom: 0.7em;
-      line-height: 1.7;
-      font-family: 'Open Sans', Arial, sans-serif;
-    }
-    /* Coursework */
-    .coursework-list {
-      columns: 2;
-      max-width: 540px;
-      margin: 1em 0 0 0;
-      font-size: 1em;
-      color: #1a1a33;
-      padding-left: 1em;
-    }
-    .coursework-list li {
-      margin-bottom: 0.42em;
-    }
-    /* Competitions & Work */
-    .competition-list, .work-list {
-      margin: 0.7em 0 0 0;
-      font-size: 1.06em;
-      color: #42217b;
-      padding-left: 1.2em;
-    }
-    .competition-list li, .work-list li {
-      margin-bottom: 0.5em;
-    }
-    /* Footer */
-    footer {
-      text-align: center;
-      font-family: var(--heading-font);
-      color: #fff;
-      font-size: 1.08em;
-      background: #341a87;
-      padding: 1.4em 0 1.7em 0;
-      letter-spacing: 0.01em;
-      border-top-left-radius: 18px;
-      border-top-right-radius: 18px;
-      box-shadow: 0 -4px 28px #3e39d050;
-      margin-top: 1.6em;
+    .section-content {
+      width: 92vw; max-width: 760px;
+      min-height: 58vh; background: #fff9eb;
+      border-radius: 36px;
+      box-shadow: 0 12px 60px #ff2af644, 0 2px 18px #0002;
+      padding: 3em 2.1em 2em 2.1em;
       position: relative;
-      z-index: 2;
+      animation: popIn 1.1s cubic-bezier(.47,1.64,.41,.8);
     }
-    .footer-socials a {
-      color: #11e5c0;
-      text-decoration: none;
-      margin: 0 11px;
-      font-size: 1.1em;
-      transition: color 0.18s;
+    .section-content h2 {
+      font-family: 'Luckiest Guy', cursive; font-size:2.1em; color:#ff2af6;
+      margin: 0 0 0.3em 0; letter-spacing: 0.04em;
+      text-shadow: 1px 2px #fff6, 0 2px 12px #4af2ef44;
     }
-    .footer-socials a:hover {
-      color: #f336e9;
+    .section-close {
+      position: absolute; top:1.2em; right:1.5em;
+      font-size: 2.5em; color: #ee44cc; cursor: pointer; font-family: 'Luckiest Guy', cursive;
+      user-select:none; transition: color 0.13s;
     }
+    .section-close:hover { color: #391b47;}
+    /* Responsive map and content */
     @media (max-width: 730px) {
-      main {padding: 13px 2vw;}
-      section {padding: 1.3em 0.9em;}
-      header h1 {font-size: 1.32em;}
-      nav a {padding: 8px 7vw;}
-      .projects-carousel {grid-template-columns: 1fr;}
-      .coursework-list {columns: 1;}
+      .park-map-svg { width:98vw; min-height:300px; max-height:340px;}
+      .mascot-holder { right:2vw;}
+      .mascot-img {width:55px; height:55px;}
+      .section-content { padding: 1.3em 0.6em 1.3em 0.6em;}
     }
   </style>
 </head>
 <body>
-  <div class="bg-overlay"></div>
-  <header>
-    <h1>🎠 Kniff World</h1>
-    <div class="marquee">✨ Welcome to the most cursed (yet mathematically rigorous) theme park on the internet! ✨</div>
-    <nav>
-      <a href="#projects">Projects</a>
-      <a href="#coding">Coding</a>
-      <a href="#math">Math</a>
-      <a href="#coursework">Coursework</a>
-      <a href="#competitions">Competitions</a>
-      <a href="#work">Work</a>
-    </nav>
-  </header>
-  <main>
-    <section id="projects">
-      <span class="ride-label">🎢 Current Projects</span>
-      <h2>Projects</h2>
-      <div class="section-desc">Stuff I'm currently building, breaking, or optimizing:</div>
-      <div class="projects-carousel">
-        <div class="project-card">
-          <div class="project-title">Windsurf Portfolio Engine</div>
-          <div class="project-desc">A personal website generator and portfolio CMS built with the Windsurf IDE. Theme park mode enabled for maximal irony.</div>
-          <div class="project-links">
-            <a href="https://github.com/evankniffen/kniff.world" target="_blank">GitHub</a>
-          </div>
-        </div>
-        <div class="project-card">
-          <div class="project-title">Quantitative Meme Analyzer</div>
-          <div class="project-desc">Python pipeline for meme classification, sentiment, and cross-platform virality analysis using transformers and scikit-learn.</div>
-          <div class="project-links">
-            <a href="#" target="_blank">GitHub</a>
-            <a href="#" target="_blank">Live Demo</a>
-          </div>
-        </div>
-        <div class="project-card">
-          <div class="project-title">Stochastic Integral Explorer</div>
-          <div class="project-desc">Interactive tool to visualize Itô integrals, Brownian motion, and martingale processes in the browser. Powered by D3.js and WebGL.</div>
-          <div class="project-links">
-            <a href="#" target="_blank">GitHub</a>
-          </div>
-        </div>
-        <!-- Add more project-cards as you like! -->
-      </div>
-    </section>
-
-    <section id="coding">
-      <span class="ride-label">🛠️ Coding Languages & Tools</span>
-      <h2>Coding</h2>
-      <div class="section-desc">Languages, frameworks, and tech I can bend to my will:</div>
-      <div class="coding-list">
-        <span class="lang-badge">Python</span>
-        <span class="lang-badge">JavaScript</span>
-        <span class="lang-badge">C++</span>
-        <span class="lang-badge">R</span>
-        <span class="lang-badge">HTML5</span>
-        <span class="lang-badge">CSS3</span>
-        <span class="lang-badge">React</span>
-        <span class="lang-badge">D3.js</span>
-        <span class="lang-badge">LaTeX</span>
-        <span class="lang-badge">SQL</span>
-        <span class="lang-badge">Pandas</span>
-        <span class="lang-badge">TensorFlow</span>
-        <span class="lang-badge">PyTorch</span>
-        <!-- Add or remove badges as needed -->
-      </div>
-    </section>
-
-    <section id="math">
-      <span class="ride-label">🧮 Math</span>
-      <h2>Math</h2>
-      <div class="section-desc">A few obsessions: measure theory, stochastic calculus, cursed integrals, and beautiful proofs.</div>
-      <div class="math-content">
-        <b>Favorite Theorem:</b> <em>“The only way to prove you can solve integrals nobody else can is to post about them on your personal website.”</em><br>
-        <ul>
-          <li>Itô & Stratonovich calculus, stochastic processes</li>
-          <li>Measure-theoretic probability, martingales</li>
-          <li>Real/complex analysis, functional equations</li>
-          <li>Fractal geometry & chaos theory</li>
-          <li>Experimental math: numerical methods & computer algebra</li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="coursework">
-      <span class="ride-label">📚 Coursework</span>
-      <h2>Coursework</h2>
-      <div class="section-desc">Selected university courses and independent study:</div>
-      <ul class="coursework-list">
-        <li>Stochastic Calculus</li>
-        <li>Real & Complex Analysis</li>
-        <li>Numerical Methods for Finance</li>
-        <li>Modern Algebra</li>
-        <li>Partial Differential Equations</li>
-        <li>Measure Theory</li>
-        <li>Machine Learning</li>
-        <li>Statistical Inference</li>
-        <li>Financial Engineering</li>
-        <li>Data Visualization</li>
-        <li>Mathematical Modeling</li>
-        <li>Advanced Python Programming</li>
-        <!-- Add more! -->
-      </ul>
-    </section>
-
-    <section id="competitions">
-      <span class="ride-label">🏆 Competitions</span>
-      <h2>Competitions</h2>
-      <div class="section-desc">Stuff I’ve tried to win or chaos I’ve entered:</div>
-      <ul class="competition-list">
-        <li>Putnam Mathematical Competition (Top 10%)</li>
-        <li>Mathematical Contest in Modeling (MCM) – Meritorious Winner</li>
-        <li>ACM ICPC Regionals (Team Lead)</li>
-        <li>DataFest Analytics Challenge – 1st Place</li>
-        <li>Kaggle Competitions (Titanic, House Prices, etc.)</li>
-        <li>National Math Olympiad Finalist</li>
-        <!-- Add your own! -->
-      </ul>
-    </section>
-
-    <section id="work">
-      <span class="ride-label">💼 Work Experience</span>
-      <h2>Work</h2>
-      <div class="section-desc">A few of my favorite gigs and jobs:</div>
-      <ul class="work-list">
-        <li>Quantitative Analyst Intern – Capital Group</li>
-        <li>Research Assistant – Department of Mathematics, TAMU</li>
-        <li>Data Science Fellow – Center for Applied Data Analytics</li>
-        <li>Software Developer – Freelance/Contract</li>
-        <!-- Add more work/roles here! -->
-      </ul>
-    </section>
-  </main>
-  <footer>
-    <div>🎡 <b>Kniff World</b> | Where every project is a ride 🎢</div>
-    <div class="footer-socials">
-      <a href="mailto:evan.kniffen2@gmail.com">Email</a>
-      <a href="https://github.com/evankniffen" target="_blank">GitHub</a>
-      <a href="https://linkedin.com/in/evankniffen" target="_blank">LinkedIn</a>
+  <!-- SVG Park Map -->
+  <div class="park-map-container">
+    <svg class="park-map-svg" viewBox="0 0 900 560">
+      <!-- Park zones as clickable paths/shapes -->
+      <!-- You can make these fancier SVG paths later! -->
+      <ellipse class="zone" id="zone-projects"   cx="190" cy="230" rx="110" ry="70" fill="#f336e9"     stroke="#fff" stroke-width="6"/>
+      <ellipse class="zone" id="zone-coding"     cx="380" cy="110" rx="85"  ry="58" fill="#ffe743"     stroke="#fff" stroke-width="5"/>
+      <ellipse class="zone" id="zone-math"       cx="710" cy="160" rx="99"  ry="67" fill="#11e5c0"     stroke="#fff" stroke-width="6"/>
+      <ellipse class="zone" id="zone-coursework" cx="660" cy="400" rx="86"  ry="56" fill="#a06bfa"     stroke="#fff" stroke-width="5"/>
+      <ellipse class="zone" id="zone-competitions" cx="300" cy="410" rx="97"  ry="58" fill="#fd73fa"   stroke="#fff" stroke-width="6"/>
+      <ellipse class="zone" id="zone-work"       cx="560" cy="290" rx="72"  ry="50" fill="#fcf6b1"     stroke="#fff" stroke-width="5"/>
+      <!-- Signs (labels) -->
+      <text x="180" y="225" fill="#fff" font-family="Luckiest Guy" font-size="2.0em" text-anchor="middle" pointer-events="none" style="text-shadow:2px 2px 8px #333;">Projects</text>
+      <text x="380" y="115" fill="#ad0075" font-family="Luckiest Guy" font-size="1.5em" text-anchor="middle" pointer-events="none" >Coding</text>
+      <text x="715" y="165" fill="#035156" font-family="Luckiest Guy" font-size="1.5em" text-anchor="middle" pointer-events="none" >Math</text>
+      <text x="670" y="395" fill="#fff" font-family="Luckiest Guy" font-size="1.3em" text-anchor="middle" pointer-events="none">Coursework</text>
+      <text x="300" y="410" fill="#fff" font-family="Luckiest Guy" font-size="1.3em" text-anchor="middle" pointer-events="none">Competitions</text>
+      <text x="560" y="292" fill="#bd930c" font-family="Luckiest Guy" font-size="1.2em" text-anchor="middle" pointer-events="none">Work</text>
+      <!-- You can add SVG “rides”, balloons, etc. here! -->
+      <!-- Park entrance sign -->
+      <rect x="300" y="27" rx="22" ry="24" width="300" height="45" fill="#ffe743" stroke="#fff" stroke-width="4"/>
+      <text x="450" y="58" fill="#ff2af6" font-family="Luckiest Guy" font-size="2.2em" text-anchor="middle">🎡 Kniff World</text>
+    </svg>
+  </div>
+  <!-- Mascot in corner -->
+  <div class="mascot-holder">
+    <div class="mascot-bubble" id="mascot-bubble">
+      Welcome! <br>Pick a zone to ride.<br>🏗️
     </div>
-    <div style="font-size:0.98em; color:#baffee; margin-top:0.5em;">&copy; 2025 Evan Kniffen</div>
-  </footer>
+    <img class="mascot-img" src="https://api.dicebear.com/8.x/lorelei/svg?seed=Kniff&backgroundColor=ff2af6,ffe743,11e5c0" alt="Kniff Mascot">
+  </div>
+  <!-- Section Overlays (hidden initially) -->
+  <div id="section-modal" class="section-modal" style="display:none;">
+    <div class="section-content">
+      <span class="section-close" onclick="closeModal()">×</span>
+      <div id="modal-content-area">
+        <!-- Content loaded here -->
+      </div>
+    </div>
+  </div>
+  <script>
+    // Clickable park zones trigger overlays
+    function closeModal() {
+      document.getElementById('section-modal').style.display = 'none';
+      document.body.style.overflow = '';
+    }
+    // Modal content for each section
+    const sectionContent = {
+      "zone-projects": `
+        <h2>Projects</h2>
+        <div>🚀 Welcome to the Projects Zone!<br><br>
+        <b>Windsurf Portfolio Engine</b><br>
+        <i>A theme park portfolio generator. Maximum chaos, minimal configuration.</i><br><br>
+        <b>Quantitative Meme Analyzer</b><br>
+        <i>Because not all memes are born equal. Python, ML, and unhinged analysis.</i><br><br>
+        <b>Stochastic Integral Explorer</b><br>
+        <i>Interactive Itô integrals, in-browser.</i>
+        </div>
+      `,
+      "zone-coding": `
+        <h2>Coding Languages & Tools</h2>
+        <div>Python, JS, C++, LaTeX, SQL, React, D3.js, Pandas, TensorFlow, PyTorch, and whatever language is trending on Hacker News this week.</div>
+      `,
+      "zone-math": `
+        <h2>Math</h2>
+        <div>
+        <ul>
+          <li>Stochastic calculus, martingales, and chaos</li>
+          <li>Experimental math (computer algebra, numeric weirdness)</li>
+          <li>Proofs nobody else asked for</li>
+        </ul>
+        </div>
+      `,
+      "zone-coursework": `
+        <h2>Coursework</h2>
+        <ul>
+          <li>Stochastic Calculus, Measure Theory, Real/Complex Analysis, PDEs</li>
+          <li>Machine Learning, Data Science, Advanced Python, Finance</li>
+          <li>Modern Algebra, Mathematical Modeling</li>
+        </ul>
+      `,
+      "zone-competitions": `
+        <h2>Competitions</h2>
+        <ul>
+          <li>Putnam, MCM, DataFest, ICPC Regionals</li>
+          <li>Kaggle, National Math Olympiad</li>
+        </ul>
+      `,
+      "zone-work": `
+        <h2>Work</h2>
+        <ul>
+          <li>Quantitative Analyst Intern – Capital Group</li>
+          <li>Research Assistant – TAMU Math</li>
+          <li>Data Science Fellow – Center for Applied Data Analytics</li>
+        </ul>
+      `
+    };
+    // Attach events
+    ["zone-projects","zone-coding","zone-math","zone-coursework","zone-competitions","zone-work"].forEach(id=>{
+      document.getElementById(id).addEventListener('click', ()=>{
+        document.getElementById('section-modal').style.display = 'flex';
+        document.getElementById('modal-content-area').innerHTML = sectionContent[id];
+        document.body.style.overflow = 'hidden';
+        mascotSay("Enjoy the " + document.getElementById(id).nextSibling.textContent.trim() + " ride! 🎢");
+      });
+    });
+    // Mascot: speech bubble tips that change
+    function mascotSay(msg) {
+      document.getElementById('mascot-bubble').innerHTML = msg;
+      setTimeout(()=>{document.getElementById('mascot-bubble').innerHTML = 
+        "Welcome! <br>Pick a zone to ride.<br>🏗️";}, 3800);
+    }
+    // Accessibility: ESC closes modal
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape") closeModal();
+    });
+  </script>
 </body>
 </html>
