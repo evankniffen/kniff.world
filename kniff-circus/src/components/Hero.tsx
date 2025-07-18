@@ -1,47 +1,97 @@
 // src/components/Hero.tsx
 import React from 'react';
 import styled from 'styled-components';
-import { Typewriter } from 'react-simple-typewriter';
-import { motion } from 'framer-motion';
-import { 
-  TerminalWindow, 
-  WindowHeader, 
-  WindowBody, 
-  Dot, 
-  Prompt 
-} from './TerminalComponents';
 
-export const Hero: React.FC = () => (
-  <TerminalWindow
-    as={motion.div}
-    initial={{ scale:0.9, opacity:0 }}
-    animate={{ scale:1, opacity:1 }}
-    transition={{ duration:0.8 }}
-  >
-    <WindowHeader>
-      <Dot style={{ background:'#f00' }}/>
-      <Dot style={{ background:'#ff0' }}/>
-      <Dot style={{ background:'#0f0' }}/>
-    </WindowHeader>
-    <WindowBody>
-      <Line>
-        <Prompt>Kniff@tamu:~$</Prompt>{' '}
-        <Typewriter
-          words={['npm start kniff-world']}
-          cursor
-          cursorStyle='_'
-          typeSpeed={80}
-          deleteSpeed={50}
-          loop={1}
-        />
-      </Line>
-      <Line>Loading digital circus...</Line>
-    </WindowBody>
-  </TerminalWindow>
-);
-
-const Line = styled.div`
-  display:flex;
-  align-items:center;
-  white-space:nowrap;
+const StyledHero = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1000px;
+  
+  @media (max-width: 768px) {
+    padding-top: 150px;
+  }
 `;
+
+const Greeting = styled.h1`
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: clamp(var(--fz-sm), 5vw, var(--fz-md));
+  font-weight: 400;
+  margin: 0 0 20px 4px;
+`;
+
+const BigHeading = styled.h2`
+  font-size: clamp(40px, 8vw, 80px);
+  margin: 0;
+  color: var(--lightest-slate);
+  line-height: 1.1;
+`;
+
+const BiggerHeading = styled.h3`
+  font-size: clamp(40px, 8vw, 70px);
+  margin: 10px 0 0;
+  color: var(--slate);
+  line-height: 1.1;
+`;
+
+const Description = styled.div`
+  margin-top: 25px;
+  max-width: 540px;
+  
+  p {
+    margin: 20px 0 0;
+  }
+`;
+
+const Button = styled.button`
+  color: var(--primary);
+  background-color: transparent;
+  border: 1px solid var(--primary);
+  border-radius: var(--border-radius);
+  padding: 1.25rem 1.75rem;
+  font-size: var(--fz-sm);
+  font-family: var(--font-mono);
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 50px;
+  
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--primary-tint);
+    outline: none;
+  }
+  
+  &:after {
+    display: none !important;
+  }
+`;
+
+export const Hero: React.FC = () => {
+  return (
+    <StyledHero id="hero">
+      <Greeting>Hi, my name is</Greeting>
+      <BigHeading>Your Name.</BigHeading>
+      <BiggerHeading>I build things for the web.</BiggerHeading>
+      
+      <Description>
+        <p>
+          I'm a software engineer based in [Your Location] specializing in building (and occasionally designing)
+          exceptional websites, applications, and everything in between.
+        </p>
+      </Description>
+      
+      <Button
+        onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+      >
+        Get In Touch
+      </Button>
+    </StyledHero>
+  );
+};
