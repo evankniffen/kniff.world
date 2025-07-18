@@ -176,7 +176,7 @@ const StyledDetailBody = styled.div`
   }
 `;
 
-const AboutItem = styled.li`
+export const AboutItem = styled.li`
   margin: 1rem 0;
   padding: 1rem;
   cursor: pointer;
@@ -340,7 +340,7 @@ export const About: React.FC = () => {
         <Dot style={{ background: '#0f0' }}/>
       </WindowHeader>
       <WindowBody>
-        <Prompt>Kniff@tamu:~/about$</Prompt>{' '}
+        <Prompt>kniff@tamu:~/about$</Prompt>{' '}
         <Typewriter words={['ls -la']} cursor cursorStyle="_" typeSpeed={90} delaySpeed={1500} />
         <List>
           {aboutItems.map((item, index) => (

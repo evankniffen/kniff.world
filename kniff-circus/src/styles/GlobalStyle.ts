@@ -1,5 +1,7 @@
 // src/styles/GlobalStyle.ts
 import { createGlobalStyle } from 'styled-components';
+import { StyledDetailBody, StyledDetailModal, TerminalItem } from '../components/TerminalUI';
+import { AboutItem } from '../components/About';
 
 export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap');
@@ -62,6 +64,139 @@ export const GlobalStyle = createGlobalStyle`
     &:hover {
       color: #0F0;
       text-shadow: 0 0 5px rgba(0, 255, 0, 0.7);
+    }
+  }
+
+  /* ─── Mobile‑first global overrides ─── */
+  @media (max-width: 768px) {
+    :root {
+      font-size: 14px; /* Base font size for mobile */
+    }
+    
+    html, body {
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    
+    body { 
+      padding: 0;
+      min-width: 100%;
+      width: 100%;
+    }
+    
+    /* ASCII Art and Terminal Text */
+    pre, code, .ascii-art {
+      font-size: 0.5rem !important;
+      line-height: 1.1 !important;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-x: auto;
+    }
+    
+    /* Layout adjustments */
+    .AppGrid { 
+      display: flex; 
+      flex-direction: column;
+      width: 100%;
+      margin: 0;
+    }
+    
+    .Sidebar { 
+      display: none; 
+    }
+    
+    .Main { 
+      width: 100% !important; 
+      padding: 0.5rem !important;
+      margin: 0 !important;
+    }
+    
+    section { 
+      padding: 1rem 0.5rem !important; 
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    /* Typography */
+    h1, h2, h3 { 
+      font-size: clamp(1.1rem, 5vw, 1.4rem) !important; 
+      line-height: 1.2 !important;
+      margin: 0.5rem 0 !important;
+    }
+    
+    p, li, .subtitle { 
+      font-size: 0.9rem !important; 
+      line-height: 1.4 !important; 
+      margin: 0.5rem 0 !important;
+    }
+    
+    button, [role="button"] { 
+      font-size: 0.9rem !important; 
+      padding: 0.6rem 0.8rem !important; 
+      min-height: 2.5rem;
+    }
+    
+    /* Full-screen modals on mobile */
+    ${StyledDetailModal} {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      margin: 0 !important;
+      padding: 0.5rem !important;
+      border-radius: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
+      box-shadow: none !important;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      z-index: 2001;
+    }
+    
+    ${StyledDetailBody} { 
+      font-size: 0.9rem !important; 
+      line-height: 1.4 !important;
+      padding: 0.5rem !important;
+    }
+    
+    /* Better touch targets */
+    ${AboutItem}, ${TerminalItem} {
+      margin: 0.5rem 0 !important;
+      padding: 0.8rem !important;
+      min-height: 2.5rem;
+    }
+    
+    /* GitHub button styles */
+    .github-button {
+      display: inline-flex !important;
+      align-items: center;
+      padding: 0.8rem 1.5rem !important;
+      background: rgba(0, 255, 0, 0.1) !important;
+      border: 1px solid rgba(0, 255, 0, 0.3) !important;
+      border-radius: 4px;
+      color: #0F0 !important;
+      text-decoration: none !important;
+      font-size: 1rem !important;
+      transition: all 0.3s ease !important;
+      margin: 0.5rem 0;
+      min-height: 44px;
+      min-width: 44px;
+      justify-content: center;
+    }
+    
+    .github-button:hover {
+      background: rgba(0, 255, 0, 0.2) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 2px 8px rgba(0, 255, 0, 0.2) !important;
+    }
+    
+    .github-icon {
+      margin-right: 0.5rem !important;
     }
   }
 `;

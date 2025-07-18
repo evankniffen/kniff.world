@@ -86,7 +86,7 @@ const Research: React.FC = () => {
     {
       id: 'spacecraft',
       title: 'Physics-Informed Stochastic Time Series Generation and ML for Anomaly Detection in Spacecraft Telemetry',
-      authors: 'E. Kniffen',
+      authors: 'E. Kniffen (WIP)',
       year: '2025',
       abstract: 'A mathematically rigorous framework for simulating physically plausible, high-dimensional synthetic telemetry representative of complex spacecraft systems, as well as a suite of advanced machine learning (ML) models tailored for rare event (failure) detection in this challenging regime. Our data synthesis combines Brownian motion, harmonic oscillations, wavelet bursts, cross-sensor dependencies, and controlled stochasticity, calibrated to mimic the statistical and dynamical structure of real spacecraft subsystems. I developed a multi-level feature extraction pipeline—emphasizing time, frequency, and nonlinear statistics—and benchmark Long ShortTerm Memory (LSTM) networks, Random Forests, and Logistic Regression ensembles. The resulting performance and failure detection rates are critically analyzed in light of underlying physical and information-theoretic constraints.',
       technologies: ['LSTM', 'Random Forests', 'Logistic Regression', 'Monte Carlo', 'Stochastic Drift'],
@@ -101,7 +101,7 @@ const Research: React.FC = () => {
     {
       id: 'moooo',
       title: 'Modeling Beef Cattle Growth and Economic Value under Morbidity',
-      authors: 'E. Kniffen',
+      authors: 'E. Kniffen (WIP)',
       year: '2025',
       abstract: 'Accurate simulation of beef cattle growth and economic outcomes is essential for optimizing production systems and evaluating the impact of disease management strategies. We present an agent-based modeling framework, implemented in NetLogo, that explicitly tracks individual animal variables including age (age), liveweight (weightlbs), health state (isInfected, timesInfected), and economic value (valueusd). Growth is modeled using three alternative sigmoidal functions: Gompertz, Logistic, and von Bertalanffy; each one with full parameterization and rationale. A phase-specific valuation function maps liveweight to market value across production stages (price-CC, price-ST, price-FL), supporting sensitivity to price volatility and net present value (NPV) discounting. The morbidity submodel quantifies both the direct and proportional impacts of bovine respiratory disease (BRD) events on average daily gain and cumulative costs, using parameter estimates from empirical studies. We demonstrate model selection, parameter calibration, and scenario analysis in a simulated herd of 100 calves run over a 540-day production cycle, supporting detailed experiments for disease, price, and management interventions.',
       technologies: ['NetLogo', 'Python', 'Stochastic Modeling', 'Agent-Based Modeling'],
@@ -128,7 +128,7 @@ const Research: React.FC = () => {
         <Dot style={{ background: '#0f0' }}/>
       </WindowHeader>
       <WindowBody>
-        <Prompt>Kniff@tamu:~/research$</Prompt>{' '}
+        <Prompt>kniff@tamu:~/research$</Prompt>{' '}
         <Typewriter words={['ls -la']} cursor cursorStyle="_" typeSpeed={90} delaySpeed={1500} />
         <List>
           {researchItems.map((item) => (

@@ -33,8 +33,14 @@ const StyledHero = styled.section`
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  padding: 2rem 0;
-  font-family: 'Courier New', monospace;
+  padding: 1rem 0;
+  font-family: 'Source Code Pro', monospace;
+  
+  @media (max-width: 768px) {
+    min-height: auto;
+    padding: 2rem 0.5rem;
+    align-items: flex-start;
+  }
 `;
 
 const blink = keyframes`
@@ -46,21 +52,36 @@ const blink = keyframes`
 
 
 const TerminalContent = styled(WindowBody)`
-  padding: 0 1.5rem 1.5rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   white-space: pre;
   word-break: break-word;
   max-height: 100%;
-  max-width: 100%;
+  width: 100%;
   font-weight: 600;
-  overflow-x: hidden;
+  overflow-x: auto;
   font-family: 'Source Code Pro', monospace;
+  
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    padding: 0.75rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    font-size: 0.5rem;
+    line-height: 1.1;
+  }
   
   /* Ensure all text inside is bold */
   * {
     font-weight: 600 !important;
     font-family: 'Source Code Pro', monospace !important;
+    
+    @media (max-width: 768px) {
+      font-size: inherit !important;
+      line-height: 1.1 !important;
+    }
   }
 `;
 
@@ -68,10 +89,19 @@ const TerminalLine = styled.div`
   display: flex;
   flex-wrap: nowrap;
   white-space: pre;
-  margin: 0.25rem 0;
-  line-height: 1.25;
+  margin: 0.1rem 0;
+  line-height: 1.1;
   width: 100%;
   color: #0f0;
+  letter-spacing: -0.5px;
+  
+  @media (max-width: 768px) {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.5rem !important;
+    line-height: 1.1 !important;
+    margin: 0.05rem 0;
+  }
 `;
 
 const Cursor = styled.span`

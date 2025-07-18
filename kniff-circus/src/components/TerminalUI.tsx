@@ -18,12 +18,22 @@ export const ModalBackdrop = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  padding: 20px;
+  z-index: 2000;
+  overflow-y: auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+    padding-top: 4rem;
+    align-items: flex-start;
+  }
 `;
 
 export const StyledDetailModal = styled(motion.div)`
@@ -47,10 +57,15 @@ export const StyledDetailModal = styled(motion.div)`
     margin: 1rem;
     width: calc(100% - 2rem);
     box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     
     button, [role="button"] {
-      min-height: 48px;
-      min-width: 48px;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 12px;
     }
   }
 `;
@@ -173,7 +188,7 @@ export const StyledDetailBody = styled.div`
 
 export const TerminalItem = styled.li`
   margin: 1rem 0;
-  padding: 1rem;
+  padding: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 4px;
@@ -183,6 +198,22 @@ export const TerminalItem = styled.li`
   opacity: 0;
   position: relative;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+    margin: 0.8rem 0;
+    
+    .title {
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+    
+    .subtitle, .description {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  }
   
   &:hover {
     background: rgba(0, 50, 0, 0.2);

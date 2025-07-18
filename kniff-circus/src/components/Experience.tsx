@@ -99,7 +99,7 @@ const Experience: React.FC = () => {
         <Dot style={{ background: '#0f0' }}/>
       </WindowHeader>
       <WindowBody>
-        <Prompt>Kniff@tamu:~/experience$</Prompt>{' '}
+        <Prompt>kniff@tamu:~/experience$</Prompt>{' '}
         <Typewriter words={['ls -la']} cursor cursorStyle="_" typeSpeed={90} delaySpeed={1500} />
         <List>
           {experiences.map((exp) => (
