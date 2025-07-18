@@ -49,7 +49,7 @@ const Experience: React.FC = () => {
       role: 'Pricing Analyst Intern',
       date: 'May 2025 - Present',
       description: 'Collaborated with cross‑functional teams to refine pricing models and improve decision accuracy',
-      technologies: ['Python, ', 'Tableau, ', 'Excel, ', 'VBA'],
+      technologies: ['Python', 'Tableau', 'Excel', 'VBA'],
       details: [
         'Built interactive Tableau dashboards to surface pricing trends and identify inactive customer segments',
         'Automated Excel reports using VBA macros to improve efficiency by 40%',
