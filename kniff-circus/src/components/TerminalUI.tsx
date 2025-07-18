@@ -1,23 +1,18 @@
-import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Typewriter } from 'react-simple-typewriter';
-import { TerminalWindow, WindowHeader, WindowBody, Dot, List, Prompt } from './TerminalComponents';
+import { motion } from 'framer-motion';
 
-// Animation keyframes
-const fadeIn = keyframes`
+export const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const terminalGlow = keyframes`
+export const terminalGlow = keyframes`
   0% { box-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }
   50% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.4); }
   100% { box-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }
 `;
 
-// Styled Components
-const ModalBackdrop = styled(motion.div)`
+export const ModalBackdrop = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
@@ -31,7 +26,7 @@ const ModalBackdrop = styled(motion.div)`
   padding: 20px;
 `;
 
-const StyledDetailModal = styled(motion.div)`
+export const StyledDetailModal = styled(motion.div)`
   position: relative;
   width: 100%;
   max-width: 800px;
@@ -60,7 +55,7 @@ const StyledDetailModal = styled(motion.div)`
   }
 `;
 
-const CloseButton = styled.button`
+export const CloseButton = styled.button`
   background: none;
   border: none;
   color: #0F0;
@@ -84,7 +79,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const StyledDetailHeader = styled.div`
+export const StyledDetailHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -114,7 +109,7 @@ const StyledDetailHeader = styled.div`
   }
 `;
 
-const StyledDetailBody = styled.div`
+export const StyledDetailBody = styled.div`
   line-height: 1.8;
   font-size: 1.05rem;
   
@@ -176,7 +171,7 @@ const StyledDetailBody = styled.div`
   }
 `;
 
-const AboutItem = styled.li`
+export const TerminalItem = styled.li`
   margin: 1rem 0;
   padding: 1rem;
   cursor: pointer;
@@ -290,115 +285,85 @@ const AboutItem = styled.li`
   }
 `;
 
-export const About: React.FC = () => {
-  const [showDetail, setShowDetail] = useState<string | null>(null);
+// GitHub button styles
+export const GitHubButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 1rem;
+  margin: 1.2rem 0 0.5rem;
+  background: rgba(15, 30, 15, 0.3);
+  border: 1px solid rgba(0, 255, 0, 0.4);
+  border-radius: 4px;
+  color: #0F0;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   
-  // Add touch-action to prevent browser's touch actions on the document
-  useEffect(() => {
-    const handleTouchMove = (e: TouchEvent) => {
-      // Prevent scrolling when modal is open
-      if (showDetail) {
-        e.preventDefault();
-      }
-    };
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .github-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+  
+  .github-text {
+    position: relative;
+    letter-spacing: 0.3px;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: rgba(0, 255, 0, 0.7);
+    transition: all 0.2s ease;
+  }
+  
+  &:hover {
+    background: rgba(25, 50, 25, 0.4);
+    border-color: rgba(0, 255, 0, 0.7);
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 8px rgba(0, 255, 0, 0.1);
     
-    const options = { passive: false } as AddEventListenerOptions;
-    document.addEventListener('touchmove', handleTouchMove, options);
-    return () => {
-      document.removeEventListener('touchmove', handleTouchMove, options);
-    };
-  }, [showDetail]);
-  
-  const aboutItems = [
-    {
-      id: 'whoami',
-      title: 'Evan Kniffen',
-      subtitle: 'Quant, Mathematician, Physicist',
-      description: 'I\'m a lifelong student of the game who builds cool stuff, solves integrals, and plays a lot of blackjack.'
-    },
-    {
-      id: 'skills',
-      title: 'Technical Skills',
-      subtitle: 'Python, C++, Java, Mathematica, R, TensorFlow, Keras, PyTorch',
-      description: 'I\'ve built stock-trading algorithms, Monte Carlo integrators, and SDE blackjack bots.'
-    },
-    {
-      id: 'passions',
-      title: 'Interests & Passions',
-      subtitle: 'Stochastic Calculus, Probability, Measure Theory, Machine Learning, Brownian Motion, Gambling',
-      description: 'I love to solve and write integrals, and can frequently be found doomscrolling on AoPS or MSE.'
+    &::before {
+      opacity: 1;
     }
-  ];
-
-  const selectedItem = aboutItems.find(item => item.id === showDetail) || null;
-
-  return (
-    <TerminalWindow as={motion.div} initial={{ x: -200, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 120, damping: 14 }}>
-      <WindowHeader>
-        <Dot style={{ background: '#f00' }}/>
-        <Dot style={{ background: '#ff0' }}/>
-        <Dot style={{ background: '#0f0' }}/>
-      </WindowHeader>
-      <WindowBody>
-        <Prompt>Kniff@tamu:~/about$</Prompt>{' '}
-        <Typewriter words={['ls -la']} cursor cursorStyle="_" typeSpeed={90} delaySpeed={1500} />
-        <List>
-          {aboutItems.map((item, index) => (
-            <AboutItem 
-              key={item.id} 
-              onClick={() => setShowDetail(item.id)}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <span className="command">&gt; {item.id}</span>
-              <div className="title">{item.title}</div>
-              <div className="subtitle">{item.subtitle}</div>
-              <div className="description">
-                {item.description}
-              </div>
-            </AboutItem>
-          ))}
-        </List>
-        
-        <AnimatePresence>
-          {showDetail && selectedItem && (
-            <ModalBackdrop
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  setShowDetail(null);
-                }
-              }}
-            >
-              <StyledDetailModal 
-                key={showDetail} 
-                initial={{ scale: 0.95, opacity: 0 }} 
-                animate={{ scale: 1, opacity: 1 }} 
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <StyledDetailHeader>
-                  <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
-                  <div>
-                    <Dot style={{ background: '#f00' }}/>
-                    <Dot style={{ background: '#ff0' }}/>
-                    <Dot style={{ background: '#0f0' }}/>
-                  </div>
-                </StyledDetailHeader>
-              <StyledDetailBody>
-                <h3>{selectedItem.title}</h3>
-                <div className="subtitle">{selectedItem.subtitle}</div>
-                <p>{selectedItem.description}</p>
-                {selectedItem.id === 'whoami' && (
-                    <p>Let's build something amazing together!</p>
-                )}
-              </StyledDetailBody>
-            </StyledDetailModal>
-            </ModalBackdrop>
-          )}
-        </AnimatePresence>
-      </WindowBody>
-    </TerminalWindow>
-  );
-};
+    
+    .github-icon {
+      transform: scale(1.1);
+    }
+    
+    .github-text {
+      text-decoration-color: #0F0;
+      text-underline-offset: 0.25em;
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: none;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid rgba(0, 255, 0, 0.6);
+    outline-offset: 2px;
+  }
+`;

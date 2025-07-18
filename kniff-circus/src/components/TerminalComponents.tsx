@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const TerminalWindow = styled.div`
-  width: 90%;
-  max-width: 900px;
+  width: 100%;
+  max-width: 1000px;
   height: auto;
   min-height: 60vh;
   max-height: 80vh;
@@ -17,7 +17,7 @@ export const TerminalWindow = styled.div`
   flex-direction: column;
   
   @media (max-width: 768px) {
-    width: 95%;
+    width: 100%;
     max-height: 85vh;
   }
 `;
