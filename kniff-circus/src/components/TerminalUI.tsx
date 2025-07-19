@@ -31,8 +31,9 @@ export const ModalBackdrop = styled(motion.div)`
   
   @media (max-width: 768px) {
     padding: 1rem;
-    padding-top: 4rem;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 `;
 
@@ -52,15 +53,14 @@ export const StyledDetailModal = styled(motion.div)`
   -webkit-overflow-scrolling: touch;
   
   @media (max-width: 768px) {
-    padding: 1.2rem;
-    max-height: 90vh;
-    margin: 1rem;
-    width: calc(100% - 2rem);
+    position: relative;
+    padding: 1rem;
+    max-height: 70vh;
+    max-width: 70vw;
+    width: 70vw;
+    margin: 2rem;
     box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    overflow-y: auto;
     
     button, [role="button"] {
       min-height: 44px;
