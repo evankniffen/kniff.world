@@ -81,8 +81,9 @@ Error generating stack: `+n.message+`
   
   @media (max-width: 768px) {
     padding: 1rem;
-    padding-top: 4rem;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 `,_i=rt(ie.div)`
   position: relative;
@@ -100,15 +101,14 @@ Error generating stack: `+n.message+`
   -webkit-overflow-scrolling: touch;
   
   @media (max-width: 768px) {
-    padding: 1.2rem;
-    max-height: 90vh;
-    margin: 1rem;
-    width: calc(100% - 2rem);
+    position: relative;
+    padding: 1rem;
+    max-height: 70vh;
+    max-width: 70vw;
+    width: 70vw;
+    margin: 2rem;
     box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    overflow-y: auto;
     
     button, [role="button"] {
       min-height: 44px;
@@ -917,21 +917,21 @@ Error generating stack: `+n.message+`
       min-height: 2.5rem;
     }
     
-    /* Full-screen modals on mobile */
+    /* Properly sized modals on mobile */
     ${_i} {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      margin: 0 !important;
-      padding: 0.5rem !important;
-      border-radius: 0 !important;
-      max-width: none !important;
-      max-height: none !important;
-      box-shadow: none !important;
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+      width: 85vw !important;
+      height: auto !important;
+      max-height: 80vh !important;
+      margin: 2rem auto !important;
+      padding: 1rem !important;
+      border-radius: 8px !important;
+      max-width: 85vw !important;
+      box-shadow: 0 0 40px rgba(0, 255, 0, 0.2) !important;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       z-index: 2001;
