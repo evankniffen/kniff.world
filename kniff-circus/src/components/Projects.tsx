@@ -157,7 +157,7 @@ export const Projects: React.FC = () => {
               <StyledDetailModal 
                 key={selectedProject.id}
                 initial={{ scale: 0.95, opacity: 0 }} 
-                animate={{ scale: 1, opacity: 1 }} 
+                animate={{ scale: 0.95, opacity: 1 }} 
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 onClick={(e) => e.stopPropagation()}

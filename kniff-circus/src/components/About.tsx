@@ -311,7 +311,7 @@ export const About: React.FC = () => {
   
   const aboutItems = [
     {
-      id: 'whoami',
+      id: 'the-goat',
       title: 'Evan Kniffen',
       subtitle: 'Quant, Mathematician, Physicist',
       description: 'I\'m a lifelong student of the game who builds cool stuff, solves integrals, and plays a lot of blackjack.'
@@ -374,7 +374,7 @@ export const About: React.FC = () => {
               <StyledDetailModal 
                 key={showDetail} 
                 initial={{ scale: 0.95, opacity: 0 }} 
-                animate={{ scale: 1, opacity: 1 }} 
+                animate={{ scale: 0.95, opacity: 1 }} 
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
