@@ -156,10 +156,23 @@ export const Projects: React.FC = () => {
             >
               <StyledDetailModal 
                 key={selectedProject.id}
-                initial={{ scale: 0.95, opacity: 0 }} 
-                animate={{ scale: 0.95, opacity: 1 }} 
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ 
+                  scale: 1, 
+                  opacity: 1,
+                  y: 0,
+                  transition: { 
+                    type: "spring",
+                    damping: 25,
+                    stiffness: 300
+                  }
+                }}
+                exit={{ 
+                  scale: 0.95, 
+                  opacity: 0,
+                  y: 20,
+                  transition: { duration: 0.15 }
+                }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <StyledDetailHeader>

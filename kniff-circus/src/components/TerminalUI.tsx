@@ -1,5 +1,7 @@
-import styled, { keyframes } from 'styled-components';
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import styled, { keyframes, css } from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import ReactDOM from 'react-dom';
 
 export const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
@@ -12,31 +14,43 @@ export const terminalGlow = keyframes`
   100% { box-shadow: 0 0 5px rgba(0, 255, 0, 0.2); }
 `;
 
-export const ModalBackdrop = styled(motion.div)`
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  background: rgba(0, 0, 0, 0.85);
+const modalBaseStyles = css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999 !important;
-  overflow-y: auto;
-  padding: 2rem;
+  padding: 1rem;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  
-  @media (max-width: 768px) {
-    padding: 1rem;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: none;
+
+  @supports (padding: max(0px)) {
+    padding: max(1rem, env(safe-area-inset-top)) 
+             max(1rem, env(safe-area-inset-right)) 
+             max(1rem, env(safe-area-inset-bottom)) 
+             max(1rem, env(safe-area-inset-left));
   }
+`;
+
+export const ModalBackdrop = styled(motion.div)`
+  ${modalBaseStyles}
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: auto;
+  z-index: 10000;
+  
+  /* Ensure proper stacking context */
+  isolation: isolate;
 `;
 
 export const StyledDetailModal = styled(motion.div)`
@@ -44,57 +58,204 @@ export const StyledDetailModal = styled(motion.div)`
   width: 100%;
   max-width: 800px;
   max-height: 90vh;
-  background: rgba(10, 25, 10, 0.98);
+  background: rgba(10, 22, 10, 0.98);
   border: 1px solid #0F0;
   border-radius: 8px;
-  padding: 2.5rem;
-  box-shadow: 0 0 40px rgba(0, 255, 0, 0.2);
+  padding: 2rem;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
   overflow-y: auto;
-  animation: ${terminalGlow} 3s infinite;
-  backdrop-filter: blur(5px);
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+  animation: ${terminalGlow} 3s infinite;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  margin: auto;
+  transform-origin: center center;
+  will-change: transform, opacity;
+  z-index: 10001; /* Above the backdrop */
   
+  /* Create a new stacking context */
+  isolation: isolate;
+
   @media (max-width: 768px) {
-    position: relative;
-    padding: 1rem;
-    max-height: 70vh;
-    max-width: 70vw;
-    width: 70vw;
-    margin: 2rem;
-    box-sizing: border-box;
-    overflow-y: auto;
-    
-    button, [role="button"] {
-      min-height: 44px;
-      min-width: 44px;
-      padding: 12px;
-    }
+    max-width: calc(100% - 2rem);
+    max-height: 90vh;
+    padding: 1.5rem;
+    margin: 1rem;
+    width: 100%;
+  }
+
+  /* Focus styles for accessibility */
+  &:focus {
+    outline: 2px solid #0F0;
+    outline-offset: 2px;
   }
 `;
 
 export const CloseButton = styled.button`
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
   background: none;
   border: none;
   color: #0F0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   cursor: pointer;
-  padding: 1rem;
-  margin: -1rem;
+  padding: 0.5rem;
   line-height: 1;
-  position: relative;
-  z-index: 2;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  z-index: 10;
   
-  &:hover {
+  &:hover, &:focus {
     color: #fff;
-    text-shadow: 0 0 5px #0F0;
+    background: rgba(0, 255, 0, 0.1);
+    outline: none;
+    box-shadow: 0 0 0 2px #0F0;
+  }
+  
+  &:active {
+    transform: scale(0.95);
   }
   
   @media (max-width: 768px) {
-    padding: 1.2rem;
-    margin: -1.2rem;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    padding: 1rem;
   }
 `;
+
+// Create a dedicated div for modals if it doesn't exist
+const createModalRoot = () => {
+  const modalRoot = document.createElement('div');
+  modalRoot.id = 'modal-root';
+  Object.assign(modalRoot.style, {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none',
+    zIndex: 10000,
+  });
+  document.body.appendChild(modalRoot);
+  return modalRoot;
+};
+
+// Modal Portal Component
+export const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const el = useRef<HTMLDivElement | null>(null);
+  const modalRoot = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    // Create or get modal root
+    modalRoot.current = document.getElementById('modal-root') || createModalRoot();
+    
+    // Create portal container
+    el.current = document.createElement('div');
+    el.current.style.cssText = 'position: relative; width: 100%; height: 100%;';
+    
+    // Append to modal root
+    modalRoot.current.appendChild(el.current);
+    
+    // Lock body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      if (el.current && modalRoot.current?.contains(el.current)) {
+        modalRoot.current.removeChild(el.current);
+      }
+      document.body.style.overflow = '';
+      
+      // Clean up modal root if no more modals
+      if (modalRoot.current && modalRoot.current.children.length === 0) {
+        document.body.removeChild(modalRoot.current);
+      }
+    };
+  }, []);
+
+  return el.current ? ReactDOM.createPortal(children, el.current) : null;
+};
+
+// Modal Component
+export const Modal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title?: string;
+}> = ({ isOpen, onClose, children, title }) => {
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <ModalPortal>
+      <AnimatePresence>
+        <ModalBackdrop
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          onClick={(e) => e.target === e.currentTarget && onClose()}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
+        >
+          <StyledDetailModal
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ 
+              scale: 1, 
+              opacity: 1,
+              y: 0,
+              transition: { 
+                type: "spring",
+                damping: 25,
+                stiffness: 300
+              }
+            }}
+            exit={{ 
+              scale: 0.95, 
+              opacity: 0,
+              y: 20,
+              transition: { duration: 0.15 }
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CloseButton 
+              onClick={onClose}
+              aria-label="Close modal"
+            >
+              &times;
+            </CloseButton>
+            
+            {title && (
+              <h2 id="modal-title" style={{ marginTop: 0, color: '#0F0' }}>
+                {title}
+              </h2>
+            )}
+            
+            {children}
+          </StyledDetailModal>
+        </ModalBackdrop>
+      </AnimatePresence>
+    </ModalPortal>
+  );
+};
 
 export const StyledDetailHeader = styled.div`
   display: flex;
@@ -106,7 +267,9 @@ export const StyledDetailHeader = styled.div`
   border-bottom: 1px solid rgba(0, 255, 0, 0.2);
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 2; /* Above the modal content */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   
@@ -129,7 +292,6 @@ export const StyledDetailHeader = styled.div`
 export const StyledDetailBody = styled.div`
   line-height: 1.8;
   font-size: 1.05rem;
-  
   h3 {
     color: #0F0;
     margin: 1.5rem 0 0.5rem;
