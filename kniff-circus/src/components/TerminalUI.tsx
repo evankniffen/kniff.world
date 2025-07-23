@@ -22,7 +22,7 @@ export const ModalBackdrop = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 9998;
   overflow-y: auto;
   padding: 2rem;
   box-sizing: border-box;

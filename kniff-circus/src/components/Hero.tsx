@@ -114,6 +114,45 @@ const Cursor = styled.span`
   vertical-align: middle;
 `;
 
+const NavigationMenu = styled.div`
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #0f0;
+  border-radius: 4px;
+  background: rgba(0, 255, 0, 0.05);
+`;
+
+const MenuTitle = styled.div`
+  color: #0f0;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+`;
+
+const MenuItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(0, 255, 0, 0.1);
+    padding-left: 0.5rem;
+  }
+`;
+
+const CommandText = styled.span`
+  color: #00ff00;
+  font-weight: bold;
+  min-width: 120px;
+`;
+
+const CommandDesc = styled.span`
+  color: #0f0;
+  opacity: 0.8;
+`;
+
 interface LineData {
   text: string;
   typed: string;
@@ -235,8 +274,33 @@ export const Hero: React.FC = () => {
                     </TerminalLine>
                     <TerminalLine>
                       <Prompt>{initialPrompt}</Prompt>
-                      <span>Click around to see projects, research, and more.</span>
+                      <span>Type 'help' to see available commands or select from the menu below:</span>
                     </TerminalLine>
+                    
+                    <NavigationMenu>
+                      <MenuTitle>Available Commands:</MenuTitle>
+                      <MenuItem onClick={() => window.location.hash = 'about'}>
+                        <CommandText>about</CommandText>
+                        <CommandDesc>- Learn more about me</CommandDesc>
+                      </MenuItem>
+                      <MenuItem onClick={() => window.location.hash = 'experience'}>
+                        <CommandText>experience</CommandText>
+                        <CommandDesc>- View work experience</CommandDesc>
+                      </MenuItem>
+                      <MenuItem onClick={() => window.location.hash = 'projects'}>
+                        <CommandText>projects</CommandText>
+                        <CommandDesc>- See my projects</CommandDesc>
+                      </MenuItem>
+                      <MenuItem onClick={() => window.location.hash = 'research'}>
+                        <CommandText>research</CommandText>
+                        <CommandDesc>- Browse research work</CommandDesc>
+                      </MenuItem>
+                      <MenuItem onClick={() => window.location.hash = 'contact'}>
+                        <CommandText>contact</CommandText>
+                        <CommandDesc>- Get in touch</CommandDesc>
+                      </MenuItem>
+                    </NavigationMenu>
+                    
                     <TerminalLine style={{ marginTop: '1.5rem' }}>
                       <Prompt>{initialPrompt}</Prompt>
                       {showCursor && <Cursor />}

@@ -155,7 +155,7 @@ export const GlobalStyle = createGlobalStyle`
       box-shadow: 0 0 40px rgba(0, 255, 0, 0.2) !important;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      z-index: 2001;
+      z-index: 9999 !important;
     }
     
     ${StyledDetailBody} { 

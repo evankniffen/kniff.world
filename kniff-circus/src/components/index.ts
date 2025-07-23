@@ -1,5 +1,4 @@
 // Re-export all components
-export * from './Sidebar';
 export * from './Hero';
 export * from './About';
 export * from './Projects';
