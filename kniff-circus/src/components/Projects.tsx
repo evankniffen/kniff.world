@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import { TerminalWindow, WindowHeader, WindowBody, Dot, List, Prompt } from './TerminalComponents';
@@ -106,7 +107,7 @@ export const Projects: React.FC = () => {
         WebkitOverflowScrolling: 'touch',
         WebkitTapHighlightColor: 'transparent',
         position: 'relative',
-        minHeight: '100vh'
+        minHeight: '10vh'
       }}
     >
       <WindowHeader>
@@ -140,8 +141,9 @@ export const Projects: React.FC = () => {
           ))}
         </List>
         
-        <AnimatePresence>
-          {showDetail && selectedProject && (
+        {/* Modal rendered outside terminal container using Portal */}
+        {showDetail && selectedProject && createPortal(
+          <AnimatePresence>
             <ModalBackdrop
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -251,8 +253,9 @@ export const Projects: React.FC = () => {
                 </StyledDetailBody>
               </StyledDetailModal>
             </ModalBackdrop>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>,
+          document.body
+        )}
       </WindowBody>
     </TerminalWindow>
   );

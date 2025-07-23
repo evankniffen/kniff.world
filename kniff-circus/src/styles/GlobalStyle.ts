@@ -4,8 +4,6 @@ import { StyledDetailBody, StyledDetailModal, TerminalItem } from '../components
 import { AboutItem } from '../components/About';
 
 export const GlobalStyle = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap');
-  
   *, *::before, *::after { 
     box-sizing: border-box; 
     margin: 0; 

@@ -17,6 +17,32 @@ const asciiArt = [
   '',
 ];
 
+// Split version of the ASCII art for narrow terminals
+const splitAsciiArt = [
+  // ───────── Kniff. ─────────
+  "                          ,,     ,... ,...",
+  "`7MMF' `YMM'             db   .d' \".d' \"\"",
+  "  MM   .M'                    dM`  dM`   ",
+  "  MM .d\"    `7MMpMMMb. `7MM  mMMmmmMMmm  ",
+  "  MMMMM.      MM    MM   MM   MM   MM    ",
+  "  MM  VMA     MM    MM   MM   MM   MM    ",
+  "  MM   `MM.   MM    MM   MM   MM   MM  ,, ",
+  ".JMML.   MMb.JMML  JMML.JMML.JMML.JMML db",
+  "",
+  // ───────── World ─────────
+  "                                   ,,        ,,  ",
+  "`7MMF'     A     `7MF'            `7MM      `7MM  ",
+  "  `MA     ,MA     ,V                MM        MM  ",
+  "   VM:   ,VVM:   ,V ,pW\"Wq.`7Mb,od8 MM   ,M\"\"bMM  ",
+  "    MM.  M' MM.  M'6W'   `Wb MM' \"' MM ,AP    MM  ",
+  "    `MM A'  `MM A' 8M     M8 MM     MM 8MI    MM  ",
+  "     :MM;    :MM;  YA.   ,A9 MM     MM `Mb    MM  ",
+  "      VF      VF    `Ybmd9'.JMML. .JMML.`Wbmd\"MML.",
+  "",
+  ""
+];
+
+
 // Initial terminal prompt text
 const initialPrompt = 'kniff@tamu:~$ ';
 const loadingMessages = [
@@ -160,21 +186,31 @@ interface LineData {
 }
 
 export const Hero: React.FC = () => {
-  const [lines, setLines] = useState<LineData[]>(() => 
-    asciiArt.map(line => ({
-      text: line,
-      typed: '',
-      isTyping: true
-    }))
-  );
+  const terminalContentRef = useRef<HTMLDivElement>(null);
+  const terminalWindowRef = useRef<HTMLDivElement>(null);
   
+  // State for terminal display
+  const [useSplitArt, setUseSplitArt] = useState(false);
   const [currentLine, setCurrentLine] = useState(0);
   const [currentChar, setCurrentChar] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   
-  const terminalContentRef = useRef<HTMLDivElement>(null);
+  // Get the appropriate ASCII art based on terminal width
+  const getAsciiArt = () => {
+    return useSplitArt ? splitAsciiArt : asciiArt;
+  };
+  
+  // Initialize lines with the appropriate ASCII art
+  const [lines, setLines] = useState<LineData[]>(() => 
+    getAsciiArt().map(line => ({
+      text: line,
+      typed: '',
+      isTyping: true
+    }))
+  );
+  
   const typingSpeed = 5; // ms per character
   const lineDelay = 50; // ms between lines
   
@@ -224,16 +260,52 @@ export const Hero: React.FC = () => {
     }
   }, [currentLine, currentChar, lines]);
   
+  // Check if we should use split ASCII art based on terminal width
+  useEffect(() => {
+    if (!terminalWindowRef.current) return;
+    
+    const checkWidth = () => {
+      if (!terminalWindowRef.current) return;
+      // Check if the terminal is too narrow for the full ASCII art
+      // The full art is about 80 characters wide, so we'll use 700px as breakpoint
+      setUseSplitArt(terminalWindowRef.current.offsetWidth < 700);
+    };
+    
+    // Initial check
+    checkWidth();
+    
+    // Set up resize observer
+    const resizeObserver = new ResizeObserver(checkWidth);
+    resizeObserver.observe(terminalWindowRef.current);
+    
+    return () => {
+      if (terminalWindowRef.current) {
+        resizeObserver.unobserve(terminalWindowRef.current);
+      }
+    };
+  }, []);
+  
   // Auto-scroll to bottom when content changes
   useEffect(() => {
     if (terminalContentRef.current) {
       terminalContentRef.current.scrollTop = terminalContentRef.current.scrollHeight;
     }
-  }, [lines, loadingProgress, isComplete]);
+  }, [lines, loadingProgress, isComplete, useSplitArt]);
+  
+  // Update lines when ASCII art changes
+  useEffect(() => {
+    setLines(getAsciiArt().map(line => ({
+      text: line,
+      typed: '',
+      isTyping: true
+    })));
+    setCurrentLine(0);
+    setCurrentChar(0);
+  }, [useSplitArt]);
 
   return (
     <StyledHero>
-      <TerminalWindow>
+      <TerminalWindow ref={terminalWindowRef}>
         <WindowHeader>
           <Dot style={{ background: '#ff5f56' }} />
           <Dot style={{ background: '#ffbd2e' }} />

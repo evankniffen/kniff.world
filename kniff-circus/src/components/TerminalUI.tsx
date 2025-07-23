@@ -13,16 +13,18 @@ export const terminalGlow = keyframes`
 `;
 
 export const ModalBackdrop = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
   background: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9998;
+  z-index: 9998 !important;
   overflow-y: auto;
   padding: 2rem;
   box-sizing: border-box;
