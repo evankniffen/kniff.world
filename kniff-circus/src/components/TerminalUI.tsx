@@ -21,7 +21,7 @@ const modalBaseStyles = css`
   right: 0;
   bottom: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   z-index: 10000;
   display: flex;
   justify-content: center;
@@ -31,7 +31,6 @@ const modalBaseStyles = css`
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   -webkit-tap-highlight-color: transparent;
-  pointer-events: none;
 
   @supports (padding: max(0px)) {
     padding: max(1rem, env(safe-area-inset-top)) 

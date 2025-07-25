@@ -5,12 +5,12 @@ export const TerminalWindow = styled.div`
   max-width: 1000px;
   height: auto;
   min-height: 60vh;
-  max-height: 80vh;
+  max-height: 100dvh;
   background: #111;
   border: 2px solid #0F0;
   border-radius: 8px;
   box-shadow: 0 0 16px #0F0A0F;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
   margin: 0 auto;
   display: flex;
@@ -18,7 +18,7 @@ export const TerminalWindow = styled.div`
   
   @media (max-width: 768px) {
     width: 100%;
-    max-height: 85vh;
+    max-height: 100dvh;
   }
 `;
 

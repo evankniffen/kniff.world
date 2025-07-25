@@ -28,10 +28,12 @@ const TerminalItem = styled(BaseTerminalItem)`
     opacity: 0;
   }
   
-  &:hover .abstract {
-    max-height: 500px;
-    opacity: 1;
-    margin-top: 0.5rem;
+  @media (max-width: 768px) {
+    .abstract {
+      max-height: 500px;
+      opacity: 1;
+      margin-top: 0.5rem;
+    }
   }
 `;
 import PdfViewer from './PdfViewer';
@@ -56,16 +58,14 @@ const Research: React.FC = () => {
   
   // Prevent background scrolling when modal is open
   useEffect(() => {
-    const handleTouchMove = (e: TouchEvent) => {
-      if (showDetail || showPdf.id) {
-        e.preventDefault();
-      }
-    };
-    
-    const options = { passive: false } as AddEventListenerOptions;
-    document.addEventListener('touchmove', handleTouchMove, options);
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    if (showDetail || showPdf.id) {
+      document.body.style.overflowY = showDetail || showPdf.id ? 'hidden' : 'auto';
+    } else {
+      document.body.style.overflow = originalStyle;
+    }
     return () => {
-      document.removeEventListener('touchmove', handleTouchMove, options);
+      document.body.style.overflow = originalStyle;
     };
   }, [showDetail, showPdf.id]);
   

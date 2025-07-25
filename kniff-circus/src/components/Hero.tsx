@@ -95,8 +95,8 @@ const TerminalContent = styled(WindowBody)`
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-x: auto;
-    font-size: 0.5rem;
-    line-height: 1.1;
+    font-size: clamp(0.65rem, 2vw, 0.9rem);
+    line-height: 1.2;
   }
   
   /* Ensure all text inside is bold */
@@ -124,8 +124,8 @@ const TerminalLine = styled.div`
   @media (max-width: 768px) {
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-size: 0.5rem !important;
-    line-height: 1.1 !important;
+    font-size: clamp(0.65rem, 2vw, 0.9rem) !important;
+    line-height: 1.2 !important;
     margin: 0.05rem 0;
   }
 `;
@@ -268,7 +268,7 @@ export const Hero: React.FC = () => {
       if (!terminalWindowRef.current) return;
       // Check if the terminal is too narrow for the full ASCII art
       // The full art is about 80 characters wide, so we'll use 700px as breakpoint
-      setUseSplitArt(terminalWindowRef.current.offsetWidth < 700);
+      setUseSplitArt(terminalWindowRef.current.offsetWidth < 900 || window.innerWidth < 900);
     };
     
     // Initial check
