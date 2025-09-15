@@ -62,16 +62,16 @@ export default function PdfViewer({ file, onClose, title }: PdfViewerProps) {
       <ModalBackdrop onClick={onClose}>
         <StyledDetailModal onClick={e => e.stopPropagation()}>
           <StyledDetailHeader>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CloseButton onClick={onClose} aria-label="Close">×</CloseButton>
-              <span style={{ color: '#f00', fontFamily: '"Source Code Pro", monospace' }}>
-                Error
-              </span>
-            </div>
-            <div>
+            <div style={{ display: 'flex', gap: '6px' }}>
               <Dot style={{ background: '#f00' }} />
               <Dot style={{ background: '#ff0' }} />
               <Dot style={{ background: '#0f0' }} />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ color: '#f00', fontFamily: '"Source Code Pro", monospace' }}>
+                Error
+              </span>
+              <CloseButton onClick={onClose} aria-label="Close">×</CloseButton>
             </div>
           </StyledDetailHeader>
           <div style={{ 
@@ -140,8 +140,12 @@ export default function PdfViewer({ file, onClose, title }: PdfViewerProps) {
         onClick={e => e.stopPropagation()}
       >
         <StyledDetailHeader>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <Dot style={{ background: '#f00' }} />
+            <Dot style={{ background: '#ff0' }} />
+            <Dot style={{ background: '#0f0' }} />
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <CloseButton onClick={onClose} aria-label="Close PDF viewer">×</CloseButton>
             {title && (
               <span style={{
                 color: '#0F0',
@@ -151,11 +155,7 @@ export default function PdfViewer({ file, onClose, title }: PdfViewerProps) {
                 {title}
               </span>
             )}
-          </div>
-          <div>
-            <Dot style={{ background: '#f00' }} />
-            <Dot style={{ background: '#ff0' }} />
-            <Dot style={{ background: '#0f0' }} />
+            <CloseButton onClick={onClose} aria-label="Close PDF viewer">×</CloseButton>
           </div>
         </StyledDetailHeader>
 

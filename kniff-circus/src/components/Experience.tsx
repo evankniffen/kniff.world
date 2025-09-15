@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import { TerminalWindow, WindowHeader, WindowBody, Dot, List, Prompt } from './TerminalComponents';
@@ -16,20 +17,7 @@ import {
 const Experience: React.FC = () => {
   const [showDetail, setShowDetail] = useState<string | null>(null);
   
-  // Prevent background scrolling when modal is open
-  useEffect(() => {
-    const handleTouchMove = (e: TouchEvent) => {
-      if (showDetail) {
-        e.preventDefault();
-      }
-    };
-    
-    const options = { passive: false } as AddEventListenerOptions;
-    document.addEventListener('touchmove', handleTouchMove, options);
-    return () => {
-      document.removeEventListener('touchmove', handleTouchMove, options);
-    };
-  }, [showDetail]);
+  // Removed global touchmove preventDefault to allow modal inner scrolling on mobile
   
   interface ExperienceItem {
     id: string;
@@ -124,108 +112,113 @@ const Experience: React.FC = () => {
           ))}
         </List>
         
-        <AnimatePresence>
-          {showDetail && selectedExperience && (
-            <ModalBackdrop
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  setShowDetail(null);
-                }
-              }}
-            >
-              <StyledDetailModal 
-                key={selectedExperience.id}
-                initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                animate={{ 
-                  scale: 1, 
-                  opacity: 1,
-                  y: 0,
-                  transition: { 
-                    type: "spring",
-                    damping: 25,
-                    stiffness: 300
+        {showDetail && createPortal(
+          (
+            <AnimatePresence>
+              <ModalBackdrop
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    setShowDetail(null);
                   }
                 }}
-                exit={{ 
-                  scale: 0.95, 
-                  opacity: 0,
-                  y: 20,
-                  transition: { duration: 0.15 }
-                }}
               >
-                <StyledDetailHeader>
-                  <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
-                  <div>
-                    <Dot style={{ background: '#f00' }}/>
-                    <Dot style={{ background: '#ff0' }}/>
-                    <Dot style={{ background: '#0f0' }}/>
-                  </div>
-                </StyledDetailHeader>
-                <StyledDetailBody>
-                  <h3>{selectedExperience.company}</h3>
-                  <p className="subtitle">
-                    {selectedExperience.role} • {selectedExperience.date}
-                  </p>
-                  <p>{selectedExperience.description}</p>
-                  
-                  <h3>Key Responsibilities</h3>
-                  <ul className="details-list">
-                    {selectedExperience.details.map((detail, i) => (
-                      <li key={i}>
-                        {detail}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <h3>Technologies Used</h3>
-                  <div className="tech-tags" style={{ marginBottom: '1.5rem' }}>
-                    {selectedExperience.technologies.map((tech: string, i: number) => (
-                      <span 
-                        key={i} 
-                        className="tech-tag"
-                        style={{
-                          display: 'inline-block',
-                          backgroundColor: 'rgba(0, 255, 0, 0.1)',
-                          color: '#0F0',
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: '12px',
-                          margin: '0.2rem',
-                          fontSize: '0.85rem',
-                          border: '1px solid rgba(0, 255, 0, 0.3)',
-                          fontFamily: '"Source Code Pro", monospace'
-                        }}
-                      >
-                        {tech}
-                      </span>
-                    )) || (
-                      <span 
-                        className="tech-tag"
-                        style={{
-                          display: 'inline-block',
-                          backgroundColor: 'rgba(0, 255, 0, 0.1)',
-                          color: '#0F0',
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: '12px',
-                          margin: '0.2rem',
-                          fontSize: '0.85rem',
-                          border: '1px solid rgba(0, 255, 0, 0.3)',
-                          fontFamily: '"Source Code Pro", monospace',
-                          fontStyle: 'italic',
-                          opacity: 0.7
-                        }}
-                      >
-                        Not specified
-                      </span>
-                    )}
-                  </div>
-                </StyledDetailBody>
-              </StyledDetailModal>
-            </ModalBackdrop>
-          )}
-        </AnimatePresence>
+                {selectedExperience && (
+                  <StyledDetailModal 
+                    key={selectedExperience.id}
+                    initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                    animate={{ 
+                      scale: 1, 
+                      opacity: 1,
+                      y: 0,
+                      transition: { 
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 300
+                      }
+                    }}
+                    exit={{ 
+                      scale: 0.95, 
+                      opacity: 0,
+                      y: 20,
+                      transition: { duration: 0.15 }
+                    }}
+                  >
+                    <StyledDetailHeader>
+                      <div style={{ display: 'flex', gap: '6px' }}>
+                        <Dot style={{ background: '#f00' }}/>
+                        <Dot style={{ background: '#ff0' }}/>
+                        <Dot style={{ background: '#0f0' }}/>
+                      </div>
+                      <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
+                    </StyledDetailHeader>
+                    <StyledDetailBody>
+                      <h3>{selectedExperience.company}</h3>
+                      <p className="subtitle">
+                        {selectedExperience.role} • {selectedExperience.date}
+                      </p>
+                      <p>{selectedExperience.description}</p>
+                      
+                      <h3>Key Responsibilities</h3>
+                      <ul className="details-list">
+                        {selectedExperience.details.map((detail, i) => (
+                          <li key={i}>
+                            {detail}
+                          </li>
+                        ))}
+                      </ul>
+                      
+                      <h3>Technologies Used</h3>
+                      <div className="tech-tags" style={{ marginBottom: '1.5rem' }}>
+                        {selectedExperience.technologies.map((tech: string, i: number) => (
+                          <span 
+                            key={i} 
+                            className="tech-tag"
+                            style={{
+                              display: 'inline-block',
+                              backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                              color: '#0F0',
+                              padding: '0.25rem 0.75rem',
+                              borderRadius: '12px',
+                              margin: '0.2rem',
+                              fontSize: '0.85rem',
+                              border: '1px solid rgba(0, 255, 0, 0.3)',
+                              fontFamily: '"Source Code Pro", monospace'
+                            }}
+                          >
+                            {tech}
+                          </span>
+                        )) || (
+                          <span 
+                            className="tech-tag"
+                            style={{
+                              display: 'inline-block',
+                              backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                              color: '#0F0',
+                              padding: '0.25rem 0.75rem',
+                              borderRadius: '12px',
+                              margin: '0.2rem',
+                              fontSize: '0.85rem',
+                              border: '1px solid rgba(0, 255, 0, 0.3)',
+                              fontFamily: '"Source Code Pro", monospace',
+                              fontStyle: 'italic',
+                              opacity: 0.7
+                            }}
+                          >
+                            Not specified
+                          </span>
+                        )}
+                      </div>
+                    </StyledDetailBody>
+                  </StyledDetailModal>
+                )}
+              </ModalBackdrop>
+            </AnimatePresence>
+          ),
+          document.body
+        )}
       </WindowBody>
     </TerminalWindow>
   );

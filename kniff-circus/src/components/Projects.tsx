@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
@@ -78,21 +78,7 @@ const projects = [
 
 export const Projects: React.FC = () => {
   const [showDetail, setShowDetail] = useState<string | null>(null);
-  
-  // Prevent background scrolling when modal is open
-  useEffect(() => {
-    const handleTouchMove = (e: TouchEvent) => {
-      if (showDetail) {
-        e.preventDefault();
-      }
-    };
-    
-    const options = { passive: false } as AddEventListenerOptions;
-    document.addEventListener('touchmove', handleTouchMove, options);
-    return () => {
-      document.removeEventListener('touchmove', handleTouchMove, options);
-    };
-  }, [showDetail]);
+  // Removed global touchmove preventDefault to allow modal inner scrolling on mobile
   
   const selectedProject = showDetail ? projects.find(p => p.id === showDetail) : null;
 
@@ -176,12 +162,12 @@ export const Projects: React.FC = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <StyledDetailHeader>
-                  <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
-                  <div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
                     <Dot style={{ background: '#f00' }}/>
                     <Dot style={{ background: '#ff0' }}/>
                     <Dot style={{ background: '#0f0' }}/>
                   </div>
+                  <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
                 </StyledDetailHeader>
                 <StyledDetailBody>
                   <h3>{selectedProject.title}</h3>
