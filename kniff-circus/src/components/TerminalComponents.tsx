@@ -10,8 +10,9 @@ export const TerminalWindow = styled.div`
   border: 2px solid #0F0;
   border-radius: 8px;
   box-shadow: 0 0 16px #0F0A0F;
-  overflow: visible;
+  overflow: hidden; /* prevent header/children from overlapping body */
   position: relative;
+  z-index: 10; /* ensure window sits above any backgrounds */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -28,6 +29,10 @@ export const WindowHeader = styled.div`
   gap: 6px;
   padding: 6px 10px;
   background: #222;
+  position: relative;
+  z-index: 0; /* keep beneath list content */
+  pointer-events: none; /* don't block clicks below */
+  clip-path: inset(0 0 0 0); /* clip overflow from window */
 `;
 
 export const Dot = styled.div`
@@ -38,8 +43,10 @@ export const Dot = styled.div`
 
 export const List = styled.ul`
   list-style: none;
-  margin: 1rem 0 0 0;
+  margin: 2rem 0 0 0; /* extra space so first item is well below header */
   padding: 0;
+  position: relative;
+  z-index: 1;
 `;
 
 export const ListItem = styled.li`
@@ -79,6 +86,8 @@ export const WindowBody = styled.div`
   line-height: 1.6;
   flex: 1;
   overflow-y: auto;
+  position: relative;
+  z-index: 10; /* ensure content above header and any overlays */
   
   &::-webkit-scrollbar {
     width: 6px;

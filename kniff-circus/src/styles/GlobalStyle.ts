@@ -143,16 +143,15 @@ export const GlobalStyle = createGlobalStyle`
       left: auto !important;
       right: auto !important;
       bottom: auto !important;
-      width: 85vw !important;
+      width: 100% !important;
+      max-width: calc(100% - 2rem) !important; /* match component to avoid 100vw overflow */
       height: auto !important;
-      max-height: 80vh !important;
-      margin: 2rem auto !important;
+      max-height: 90vh !important;
+      margin: 1rem auto !important;
       padding: 1rem !important;
       border-radius: 8px !important;
-      max-width: 85vw !important;
       box-shadow: 0 0 40px rgba(0, 255, 0, 0.2) !important;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      overflow: hidden !important; /* delegate scrolling to body */
       z-index: 9999 !important;
     }
     
@@ -160,6 +159,9 @@ export const GlobalStyle = createGlobalStyle`
       font-size: 0.9rem !important; 
       line-height: 1.4 !important;
       padding: 0.5rem !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain !important;
+      touch-action: pan-y !important;
     }
     
     /* Better touch targets */

@@ -42,27 +42,28 @@ const modalBaseStyles = css`
 
 export const ModalBackdrop = styled(motion.div)`
   ${modalBaseStyles}
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   pointer-events: auto;
   z-index: 10000;
-  
-  /* Ensure proper stacking context */
-  isolation: isolate;
 `;
 
 export const StyledDetailModal = styled(motion.div)`
   position: relative;
   width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
-  background: rgba(10, 22, 10, 0.98);
-  border: 1px solid #0F0;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
   overflow-y: auto;
+  max-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  max-width: 820px;
+  height: auto;
+  max-height: 90dvh;
+  background: rgba(10, 22, 10, 0.98);
+  border: 1px solid rgba(0, 255, 0, 0.5);
+  border-radius: 10px;
+  padding: 1.75rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 24px rgba(0, 255, 0, 0.18);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   pointer-events: auto;
@@ -72,20 +73,17 @@ export const StyledDetailModal = styled(motion.div)`
   margin: auto;
   transform-origin: center center;
   will-change: transform, opacity;
-  z-index: 10001; /* Above the backdrop */
-  
-  /* Create a new stacking context */
-  isolation: isolate;
+  z-index: 10001;
 
   @media (max-width: 768px) {
+    overflow: hidden; /* delegate scrolling to body on mobile */
     max-width: calc(100% - 2rem);
-    max-height: 90vh;
-    padding: 1.5rem;
-    margin: 1rem;
+    max-height: 88dvh;
+    padding: 1.25rem;
+    margin: 0.75rem;
     width: 100%;
   }
 
-  /* Focus styles for accessibility */
   &:focus {
     outline: 2px solid #0F0;
     outline-offset: 2px;
@@ -135,7 +133,8 @@ const createModalRoot = () => {
     width: '100%',
     height: '100%',
     pointerEvents: 'none',
-    zIndex: 10000,
+    display: 'none',
+    zIndex: 200000,
   });
   document.body.appendChild(modalRoot);
   return modalRoot;
@@ -152,24 +151,27 @@ export const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children 
     
     // Create portal container
     el.current = document.createElement('div');
-    el.current.style.cssText = 'position: relative; width: 100%; height: 100%;';
-    
-    // Append to modal root
+    el.current.style.cssText = 'position: relative; z-index: 10001; pointer-events: auto;';
     modalRoot.current.appendChild(el.current);
+    if (modalRoot.current) {
+      modalRoot.current.style.display = 'block';
+      modalRoot.current.style.pointerEvents = 'auto';
+    }
     
-    // Lock body scroll when modal is open
+    // ✅ Lock scroll and bounce on open
     document.body.style.overflow = 'hidden';
-    
+    document.body.style.overscrollBehavior = 'none'; // ⬅ prevent iOS bounce/scroll chaining
+  
     return () => {
-      if (el.current && modalRoot.current?.contains(el.current)) {
-        modalRoot.current.removeChild(el.current);
+      // ✅ Clean up on unmount
+      if (modalRoot.current && el.current) modalRoot.current.removeChild(el.current);
+      // Hide modal root if no children
+      if (modalRoot.current && modalRoot.current.childElementCount === 0) {
+        modalRoot.current.style.display = 'none';
+        modalRoot.current.style.pointerEvents = 'none';
       }
       document.body.style.overflow = '';
-      
-      // Clean up modal root if no more modals
-      if (modalRoot.current && modalRoot.current.children.length === 0) {
-        document.body.removeChild(modalRoot.current);
-      }
+      document.body.style.overscrollBehavior = ''; // ⬅ reset overscroll
     };
   }, []);
 
@@ -289,43 +291,44 @@ export const StyledDetailHeader = styled.div`
 `;
 
 export const StyledDetailBody = styled.div`
-  line-height: 1.8;
-  font-size: 1.05rem;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  line-height: 1.75;
+  font-size: 1rem;
   h3 {
     color: #0F0;
     margin: 1.5rem 0 0.5rem;
-    font-size: 1.5rem;
-    font-weight: 500;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-    position: relative;
-    display: inline-block;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 50px;
-      height: 2px;
-      background: #0F0;
-    }
+    font-size: 1.35rem;
   }
   
   .subtitle {
-    color: #bbb;
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    font-style: italic;
+    color: #aaa;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  ul {
+    margin-left: 1.2rem;
+    padding-left: 0.8rem;
+    list-style: disc;
+  }
+  
+  li {
+    margin: 0.35rem 0;
   }
   
   p {
-    margin: 1.2rem 0;
-    color: #ddd;
-    line-height: 1.7;
+    margin: 0.4rem 0 0.7rem;
   }
   
-  code {
-    background: rgba(0, 50, 0, 0.3);
+  code, pre {
+    background: rgba(0, 255, 0, 0.08);
+    border: 1px solid rgba(0, 255, 0, 0.2);
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
     font-family: 'Source Code Pro', monospace;
@@ -360,6 +363,8 @@ export const TerminalItem = styled.li`
   animation: ${fadeIn} 0.5s ease-out forwards;
   opacity: 0;
   position: relative;
+  z-index: 1; /* keep above incidental overlays */
+  pointer-events: auto;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
   
