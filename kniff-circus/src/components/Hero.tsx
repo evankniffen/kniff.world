@@ -346,7 +346,7 @@ export const Hero: React.FC = () => {
                     </TerminalLine>
                     <TerminalLine>
                       <Prompt>{initialPrompt}</Prompt>
-                      <span>Type 'help' to see available commands or select from the menu below:</span>
+                      <span>Scroll down or select from the menu below:</span>
                     </TerminalLine>
                     
                     <NavigationMenu>

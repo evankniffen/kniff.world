@@ -1,6 +1,6 @@
 // src/components/PdfViewer.tsx
 import { useEffect, useState } from 'react';
-import { ModalBackdrop, StyledDetailModal, StyledDetailHeader, CloseButton } from './TerminalUI';
+import { ModalBackdrop, StyledDetailModal, StyledDetailHeader, CloseButton, ModalPortal } from './TerminalUI';
 import { Dot } from './TerminalComponents';
 
 interface PdfViewerProps {
@@ -59,74 +59,79 @@ export default function PdfViewer({ file, onClose, title }: PdfViewerProps) {
 
   if (error) {
     return (
-      <ModalBackdrop onClick={onClose}>
-        <StyledDetailModal onClick={e => e.stopPropagation()}>
-          <StyledDetailHeader>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <Dot style={{ background: '#f00' }} />
-              <Dot style={{ background: '#ff0' }} />
-              <Dot style={{ background: '#0f0' }} />
+      <ModalPortal>
+        <ModalBackdrop onClick={onClose}>
+          <StyledDetailModal onClick={e => e.stopPropagation()}>
+            <StyledDetailHeader>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <Dot style={{ background: '#f00' }} />
+                <Dot style={{ background: '#ff0' }} />
+                <Dot style={{ background: '#0f0' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: '#f00', fontFamily: '"Source Code Pro", monospace' }}>
+                  Error
+                </span>
+                <CloseButton onClick={onClose} aria-label="Close">×</CloseButton>
+              </div>
+            </StyledDetailHeader>
+            <div style={{ 
+              padding: '2rem', 
+              color: '#fff',
+              textAlign: 'center',
+              fontFamily: '"Source Code Pro", monospace',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+              alignItems: 'center'
+            }}>
+              <div>{error}</div>
+              <a 
+                href={src} 
+                download 
+                style={{
+                  display: 'inline-block',
+                  padding: '0.8rem 1.5rem',
+                  background: 'rgba(0, 255, 0, 0.1)',
+                  border: '1px solid rgba(0, 255, 0, 0.3)',
+                  borderRadius: '4px',
+                  color: '#0F0',
+                  textDecoration: 'none',
+                  fontFamily: '"Source Code Pro", monospace',
+                  marginTop: '1rem'
+                }}
+              >
+                Download PDF Instead
+              </a>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ color: '#f00', fontFamily: '"Source Code Pro", monospace' }}>
-                Error
-              </span>
-              <CloseButton onClick={onClose} aria-label="Close">×</CloseButton>
-            </div>
-          </StyledDetailHeader>
-          <div style={{ 
-            padding: '2rem', 
-            color: '#fff',
-            textAlign: 'center',
-            fontFamily: '"Source Code Pro", monospace',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            alignItems: 'center'
-          }}>
-            <div>{error}</div>
-            <a 
-              href={src} 
-              download 
-              style={{
-                display: 'inline-block',
-                padding: '0.8rem 1.5rem',
-                background: 'rgba(0, 255, 0, 0.1)',
-                border: '1px solid rgba(0, 255, 0, 0.3)',
-                borderRadius: '4px',
-                color: '#0F0',
-                textDecoration: 'none',
-                fontFamily: '"Source Code Pro", monospace',
-                marginTop: '1rem'
-              }}
-            >
-              Download PDF Instead
-            </a>
-          </div>
-        </StyledDetailModal>
-      </ModalBackdrop>
+          </StyledDetailModal>
+        </ModalBackdrop>
+      </ModalPortal>
     );
   }
 
   if (!src) {
     return (
-      <ModalBackdrop onClick={onClose}>
-        <StyledDetailModal onClick={e => e.stopPropagation()}>
-          <div style={{ 
-            padding: '2rem', 
-            color: '#fff',
-            textAlign: 'center',
-            fontFamily: '"Source Code Pro", monospace'
-          }}>
-            Loading PDF...
-          </div>
-        </StyledDetailModal>
-      </ModalBackdrop>
+      <ModalPortal>
+        <ModalBackdrop onClick={onClose}>
+          <StyledDetailModal onClick={e => e.stopPropagation()}>
+            <div style={{ 
+              padding: '2rem', 
+              color: '#fff',
+              textAlign: 'center',
+              fontFamily: '"Source Code Pro", monospace'
+            }}>
+              Loading PDF...
+            </div>
+          </StyledDetailModal>
+        </ModalBackdrop>
+      </ModalPortal>
     );
   }
 
   return (
-    <ModalBackdrop
+    <ModalPortal>
+      <ModalBackdrop
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -234,6 +239,7 @@ export default function PdfViewer({ file, onClose, title }: PdfViewerProps) {
           )}
         </div>
       </StyledDetailModal>
-    </ModalBackdrop>
+      </ModalBackdrop>
+    </ModalPortal>
   );
 }

@@ -35,7 +35,7 @@ const Experience: React.FC = () => {
       id: 'novvia',
       company: 'Novvia Group',
       role: 'Pricing Analyst Intern',
-      date: 'May 2025 - Present',
+      date: 'May 2025 - Aug 2025',
       description: 'Collaborated with cross‑functional teams to refine pricing models and improve decision accuracy',
       technologies: ['Python', 'Tableau', 'Excel', 'VBA'],
       details: [
@@ -48,7 +48,7 @@ const Experience: React.FC = () => {
     {
       id: 'approtec',
       company: 'Approtec Ran-Le',
-      role: 'Data Analyst',
+      role: 'Data Analytics Intern',
       date: 'Apr 2025 - Jul 2025',
       description: 'Developed math-infomred inventory models for supply chain optimization',
       technologies: ['Excel', 'Tableau', 'Microsoft Office', 'QuickBooks'],
@@ -61,7 +61,7 @@ const Experience: React.FC = () => {
     {
       id: 'nexustrade',
       company: 'NexusTrade',
-      role: 'SWE intern',
+      role: 'Full-Stack SWE Intern',
       date: 'Jun 2023 – Jul 2024',
       description: 'Development of trading platform interfaces',
       technologies: ['React.js', 'Node.js', 'MongoDB', 'Python', 'OpenAI APIs'],

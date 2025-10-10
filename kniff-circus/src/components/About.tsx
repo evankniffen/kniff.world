@@ -138,14 +138,14 @@ export const About: React.FC = () => {
     {
       id: 'the-goat',
       title: 'Evan Kniffen',
-      subtitle: 'Quant, Mathematician, Physicist',
+      subtitle: 'Local legend',
       description: 'I\'m a lifelong student of the game who builds cool stuff, solves integrals, and plays a lot of blackjack.'
     },
     {
-      id: 'skills',
-      title: 'Technical Skills',
-      subtitle: 'Python, C++, Java, Mathematica, R, TensorFlow, Keras, PyTorch',
-      description: 'I\'ve built stock-trading algorithms, Monte Carlo integrators, and SDE blackjack bots.'
+      id: 'edu',
+      title: 'Education',
+      subtitle: 'B.S. in Mathematics - Texas A&M University',
+      description: '2024-2026, GPA: 3.61, w/ honors. Currently submitting PhD applications for Fall 2026.'
     },
     {
       id: 'passions',
