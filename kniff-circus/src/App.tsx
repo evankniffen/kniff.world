@@ -6,6 +6,7 @@ import { BinaryRain } from './components/BinaryRain';
 import { Hero, About, Projects, Contact } from './components';
 import Experience from './components/Experience';
 import Research from './components/Research';
+import PlayPage from './play/PlayPage';
 
 const App: React.FC = () => {
   const [initialAnimationComplete, setInitialAnimationComplete] = useState(false);
@@ -21,6 +22,17 @@ const App: React.FC = () => {
   const shouldShowInitialAnimation = !initialAnimationComplete && !animationTriggered.current;
   if (shouldShowInitialAnimation) {
     animationTriggered.current = true;
+  }
+
+  // Lightweight client-side route switch for /play
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+  if (pathname.startsWith('/play')) {
+    return (
+      <>
+        <GlobalStyle />
+        <PlayPage />
+      </>
+    );
   }
 
   return (

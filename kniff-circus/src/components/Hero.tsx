@@ -371,6 +371,10 @@ export const Hero: React.FC = () => {
                         <CommandText>contact</CommandText>
                         <CommandDesc>- Get in touch</CommandDesc>
                       </MenuItem>
+                      <MenuItem onClick={() => (window.location.href = '/play')}>
+                        <CommandText>play</CommandText>
+                        <CommandDesc>- Play Moving-Cap Blackjack</CommandDesc>
+                      </MenuItem>
                     </NavigationMenu>
                     
                     <TerminalLine style={{ marginTop: '1.5rem' }}>
