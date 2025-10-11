@@ -303,23 +303,6 @@ const Input = styled.input`
   min-height: 44px;
 `;
 
-const StickyBar = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0.5rem;
-  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.55));
-  backdrop-filter: blur(6px);
-  border-top: 1px solid ${colors.border};
-  display: none;
-  gap: 0.5rem;
-  @media (max-width: 768px) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-`;
-
 const Banner = styled.div<{ $win?: boolean; $loss?: boolean }>`
   padding: 1.25rem 1.5rem;
   border: 1px solid ${p => (p.$win ? 'rgba(34,197,94,0.3)' : p.$loss ? 'rgba(239,68,68,0.3)' : colors.border)};
