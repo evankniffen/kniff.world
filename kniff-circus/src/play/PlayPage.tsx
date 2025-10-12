@@ -1,9 +1,17 @@
 // src/play/PlayPage.tsx
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes, css, createGlobalStyle } from 'styled-components';
 import { reducer, createInitialState } from './reducer';
 import { sum, nextTarget } from './helpers';
 import { FiRefreshCcw, FiHelpCircle } from 'react-icons/fi';
+
+// Global style override to fix body flex centering for PlayPage
+const PlayPageGlobalStyle = createGlobalStyle`
+  body {
+    display: block !important;
+    place-items: auto !important;
+  }
+`;
 
 // Minimalist dark theme palette
 const colors = {
@@ -37,13 +45,14 @@ const pop = keyframes`
 `;
 
 const Page = styled.div`
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background: ${colors.bg};
   color: ${colors.text};
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-sizing: border-box;
 `;
 
 const Header = styled.header`
@@ -99,23 +108,23 @@ const Main = styled.main`
   grid-template-rows: auto auto auto;
   gap: 1rem;
   padding: 1rem;
-  max-width: 1200px;
   width: 100%;
-  margin: 0 auto;
+  max-width: 100vw;
+  box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: ${colors.border} transparent;
-  
+
   &::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background-color: ${colors.border};
     border-radius: 3px;
@@ -127,6 +136,8 @@ const Panel = styled.section`
   border: 1px solid ${colors.border};
   border-radius: 10px;
   padding: 0.75rem;
+  box-sizing: border-box;
+  width: 100%;
 `;
 
 const TotalsGrid = styled.div`
@@ -207,7 +218,7 @@ const SumBadge = styled.div`
 // MiddleGrid removed as it's not used
 
 const GraphContainer = styled.div`
-  height: 200px;
+  min-height: 200px;
   position: relative;
   border: 1px solid ${colors.border};
   border-radius: 8px;
@@ -349,18 +360,26 @@ const BannerFooter = styled.div`
 `;
 
 const ModalOverlay = styled.div`
-  position: fixed; inset: 0;
+  position: fixed;
+  inset: 0;
   background: rgba(0,0,0,0.6);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 90;
+  box-sizing: border-box;
+  padding: 1rem;
 `;
 const ModalBody = styled.div`
-  width: min(860px, calc(100% - 2rem));
-  max-height: 85vh; overflow: auto;
+  width: min(860px, calc(100vw - 2rem));
+  max-width: calc(100vw - 2rem);
+  max-height: 85vh;
+  overflow: auto;
   background: ${colors.panel};
   border: 1px solid ${colors.border};
   border-radius: 10px;
   padding: 1rem;
+  box-sizing: border-box;
 `;
 
 const Overlay = styled.div`
@@ -508,274 +527,277 @@ export default function PlayPage() {
   const stakeError = state.stake < 1 || state.stake > state.bankroll;
 
   return (
-    <Page>
-      <Header>
-        <Brand href="/">kniff.world</Brand>
-        <Chip 
-          aria-live="polite" 
-          aria-label={`Current target ${Math.floor(state.T)}`} 
-          $pulse={!!state.nextTPreview}
-          $shouldPop={shouldPop}
-        >
-          <strong style={{ fontVariantNumeric: 'tabular-nums' }}>{Math.floor(state.T)}</strong>
-        </Chip>
-        <RightInfo>
-          <Button aria-label="How to play" onClick={() => setHowToOpen(true)} title="How to play">
-            <FiHelpCircle aria-hidden />
-          </Button>
-        </RightInfo>
-      </Header>
-
-      <Main>
-        {/* Top: Totals */}
-        <Panel>
-          <TotalsGrid>
-            <Row 
-              $isWinner={state.phase === 'betting' && state.lastPayout != null && state.lastPayout > 0}
-              $isLoser={state.phase === 'betting' && state.lastPayout != null && state.lastPayout < 0}
-            >
-              <RowHeader>
-                <div>Player</div>
-                <SumBadge aria-label={`Player total ${playerTotal}`}>
-                  {playerTotal}
-                  {state.phase === 'betting' && state.lastPayout != null && (
-                    <span style={{ 
-                      fontSize: '0.8em',
-                      marginLeft: '0.3em',
-                      color: state.lastPayout > 0 ? colors.safe : state.lastPayout < 0 ? colors.danger : 'inherit'
-                    }}>
-                      {state.lastPayout > 0 ? `+${state.lastPayout}` : state.lastPayout}
-                    </span>
-                  )}
-                </SumBadge>
-              </RowHeader>
-              <Draws aria-label="Player draws">
-                {state.playerDraws.map((n, i) => (
-                  <DrawChip key={`p-${i}`} aria-label={`draw ${i + 1} value ${n}`}>{n}</DrawChip>
-                ))}
-              </Draws>
-            </Row>
-            <Row>
-              <RowHeader>
-                <div>Dealer</div>
-                <SumBadge aria-label={`Dealer total ${dealerTotal}`}>
-                  {dealerTotal}
-                  {state.phase === 'betting' && state.lastPayout != null && (
-                    <span style={{ 
-                      fontSize: '0.8em',
-                      marginLeft: '0.3em',
-                      color: state.lastPayout < 0 ? colors.safe : state.lastPayout > 0 ? colors.danger : 'inherit',
-                      opacity: 0.8
-                    }}>
-                      {state.lastPayout < 0 ? `+${Math.abs(state.lastPayout)}` : state.lastPayout > 0 ? `-${state.lastPayout}` : ''}
-                    </span>
-                  )}
-                </SumBadge>
-              </RowHeader>
-              <Draws aria-label="Dealer draws">
-                {state.dealerDraws.map((n, i) => (
-                  <DrawChip key={`d-${i}`}>{n}</DrawChip>
-                ))}
-              </Draws>
-            </Row>
-          </TotalsGrid>
-        </Panel>
-
-        {/* Middle: T_{n+1} Visualization */}
-        <Panel>
-          <GraphContainer>
-            <GraphTitle>Next Target = {Math.floor(nextTarget(state.T, state.k))}</GraphTitle>
-            <Graph>
-              <GraphLine />
-              <GraphLine />
-              <GraphLine />
-              <GraphPath viewBox="0 0 400 150" preserveAspectRatio="none">
-                <path 
-                  d={generatePath(state.T, 150, state.k, 400)}
-                  fill="none"
-                  stroke={colors.accent}
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-                {(() => {
-                  // Calculate min/max values for scaling, same as in generatePath
-                  const viewportStart = state.k - 3 * Math.PI;
-                  const viewportWidth = 400;
-                  
-                  // Sample points to find min/max
-                  let minY = Infinity;
-                  let maxY = -Infinity;
-                  for (let x = 0; x <= viewportWidth; x++) {
-                    const k = viewportStart + (x / viewportWidth) * (4 * Math.PI);
-                    const value = nextTarget(state.T, k);
-                    minY = Math.min(minY, value);
-                    maxY = Math.max(maxY, value);
-                  }
-                  
-                  // Add padding
-                  const padding = Math.max(1, (maxY - minY) * 0.1);
-                  minY -= padding;
-                  maxY += padding;
-                  const range = maxY - minY;
-                  
-                  // Calculate y position
-                  const currentValue = nextTarget(state.T, state.k);
-                  const y = 150 - ((currentValue - minY) / range) * 150;
-                  
-                  return (
-                    <circle 
-                      cx={300} // Fixed at 75% of viewport width
-                      cy={y}
-                      r="4"
-                      fill={colors.accent}
-                      stroke="#fff"
-                      strokeWidth="1.5"
-                    />
-                  );
-                })()}
-              </GraphPath>
-            </Graph>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between',
-              color: colors.subtext,
-              fontSize: '0.8rem',
-              marginTop: '0.5rem'
-            }}>
-              <div>k = {state.k}</div>
-              <div>T<sub>n+1</sub> = {nextTarget(state.T, state.k)}</div>
-            </div>
-          </GraphContainer>
-        </Panel>
-
-        {/* Bottom: Controls and Banners */}
-        <Panel>
-          <ControlsGrid>
-            <Field>
-              <Label htmlFor="stake">Bet Size</Label>
-              <StakeInputRow>
-                <Button aria-label="Decrease stake" onClick={() => onStakeChange(state.stake - 1)} disabled={state.phase !== 'betting' || state.bankroll <= 0}>−</Button>
-                <Input
-                  id="stake"
-                  type="number"
-                  inputMode="numeric"
-                  min={1}
-                  max={state.bankroll}
-                  value={state.stake}
-                  onChange={(e) => onStakeChange(parseInt(e.target.value || '0', 10))}
-                  aria-invalid={stakeError}
-                  aria-describedby="stake-help"
-                  disabled={state.phase !== 'betting' || state.bankroll <= 0}
-                />
-                <Button aria-label="Increase stake" onClick={() => onStakeChange(state.stake + 1)} disabled={state.phase !== 'betting' || state.bankroll <= 0}>+</Button>
-              </StakeInputRow>
-              <div id="stake-help" style={{ color: stakeError ? '#fecaca' : colors.subtext, minHeight: 18 }}>
-                {stakeError ? 'Stake must be between 1 and bankroll.' : `Bankroll: ${state.bankroll}`}
-              </div>
-            </Field>
-
-            <Button $primary onClick={handleDeal} disabled={state.phase !== 'betting' || state.bankroll <= 0} aria-label="Deal">Deal</Button>
-            <Button onClick={handleHit} disabled={state.phase !== 'player' || sum(state.playerDraws) >= state.T} aria-label="Hit (H)">HIT</Button>
-            <Button onClick={handleStand} disabled={state.phase !== 'player'} aria-label="Stand (S)">STAND</Button>
-            <Button onClick={() => window.location.reload()} title="Reload Session" aria-label="Reload session">
-              <FiRefreshCcw aria-hidden />
+    <>
+      <PlayPageGlobalStyle />
+      <Page>
+        <Header>
+          <Brand href="/">kniff.world</Brand>
+          <Chip 
+            aria-live="polite" 
+            aria-label={`Current target ${Math.floor(state.T)}`} 
+            $pulse={!!state.nextTPreview}
+            $shouldPop={shouldPop}
+          >
+            <strong style={{ fontVariantNumeric: 'tabular-nums' }}>{Math.floor(state.T)}</strong>
+          </Chip>
+          <RightInfo>
+            <Button aria-label="How to play" onClick={() => setHowToOpen(true)} title="How to play">
+              <FiHelpCircle aria-hidden />
             </Button>
-          </ControlsGrid>
+          </RightInfo>
+        </Header>
 
-          {/* Settle Banner */}
-          {state.phase === 'betting' && state.lastPayout !== undefined && (
-            <div style={{ marginTop: '1rem' }}>
-              <Banner $win={state.lastPayout > 0} $loss={state.lastPayout < 0} role="status">
-                <BannerHeader>
-                  <div>
-                    {state.lastPayout > 0 ? '🎉 You Win!' : state.lastPayout < 0 ? '😢 You Lose' : '🤝 Push'}
-                    <div style={{ fontSize: '0.9rem', opacity: 0.9, fontWeight: 'normal' }}>
-                      {outcomeText} • Bankroll: {state.bankroll - state.lastPayout} → {state.bankroll}
+        <Main>
+          {/* Top: Totals */}
+          <Panel>
+            <TotalsGrid>
+              <Row 
+                $isWinner={state.phase === 'betting' && state.lastPayout != null && state.lastPayout > 0}
+                $isLoser={state.phase === 'betting' && state.lastPayout != null && state.lastPayout < 0}
+              >
+                <RowHeader>
+                  <div>Player</div>
+                  <SumBadge aria-label={`Player total ${playerTotal}`}>
+                    {playerTotal}
+                    {state.phase === 'betting' && state.lastPayout != null && (
+                      <span style={{ 
+                        fontSize: '0.8em',
+                        marginLeft: '0.3em',
+                        color: state.lastPayout > 0 ? colors.safe : state.lastPayout < 0 ? colors.danger : 'inherit'
+                      }}>
+                        {state.lastPayout > 0 ? `+${state.lastPayout}` : state.lastPayout}
+                      </span>
+                    )}
+                  </SumBadge>
+                </RowHeader>
+                <Draws aria-label="Player draws">
+                  {state.playerDraws.map((n, i) => (
+                    <DrawChip key={`p-${i}`} aria-label={`draw ${i + 1} value ${n}`}>{n}</DrawChip>
+                  ))}
+                </Draws>
+              </Row>
+              <Row>
+                <RowHeader>
+                  <div>Dealer</div>
+                  <SumBadge aria-label={`Dealer total ${dealerTotal}`}>
+                    {dealerTotal}
+                    {state.phase === 'betting' && state.lastPayout != null && (
+                      <span style={{ 
+                        fontSize: '0.8em',
+                        marginLeft: '0.3em',
+                        color: state.lastPayout < 0 ? colors.safe : state.lastPayout > 0 ? colors.danger : 'inherit',
+                        opacity: 0.8
+                      }}>
+                        {state.lastPayout < 0 ? `+${Math.abs(state.lastPayout)}` : state.lastPayout > 0 ? `-${state.lastPayout}` : ''}
+                      </span>
+                    )}
+                  </SumBadge>
+                </RowHeader>
+                <Draws aria-label="Dealer draws">
+                  {state.dealerDraws.map((n, i) => (
+                    <DrawChip key={`d-${i}`}>{n}</DrawChip>
+                  ))}
+                </Draws>
+              </Row>
+            </TotalsGrid>
+          </Panel>
+
+          {/* Middle: T_{n+1} Visualization */}
+          <Panel>
+            <GraphContainer>
+              <GraphTitle>Next Target = {Math.floor(nextTarget(state.T, state.k))}</GraphTitle>
+              <Graph>
+                <GraphLine />
+                <GraphLine />
+                <GraphLine />
+                <GraphPath viewBox="0 0 400 150" preserveAspectRatio="none">
+                  <path 
+                    d={generatePath(state.T, 150, state.k, 400)}
+                    fill="none"
+                    stroke={colors.accent}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  {(() => {
+                    // Calculate min/max values for scaling, same as in generatePath
+                    const viewportStart = state.k - 3 * Math.PI;
+                    const viewportWidth = 400;
+                    
+                    // Sample points to find min/max
+                    let minY = Infinity;
+                    let maxY = -Infinity;
+                    for (let x = 0; x <= viewportWidth; x++) {
+                      const k = viewportStart + (x / viewportWidth) * (4 * Math.PI);
+                      const value = nextTarget(state.T, k);
+                      minY = Math.min(minY, value);
+                      maxY = Math.max(maxY, value);
+                    }
+                    
+                    // Add padding
+                    const padding = Math.max(1, (maxY - minY) * 0.1);
+                    minY -= padding;
+                    maxY += padding;
+                    const range = maxY - minY;
+                    
+                    // Calculate y position
+                    const currentValue = nextTarget(state.T, state.k);
+                    const y = 150 - ((currentValue - minY) / range) * 150;
+                    
+                    return (
+                      <circle 
+                        cx={300} // Fixed at 75% of viewport width
+                        cy={y}
+                        r="4"
+                        fill={colors.accent}
+                        stroke="#fff"
+                        strokeWidth="1.5"
+                      />
+                    );
+                  })()}
+                </GraphPath>
+              </Graph>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between',
+                color: colors.subtext,
+                fontSize: '0.8rem',
+                marginTop: '0.5rem'
+              }}>
+                <div>k = {state.k}</div>
+                <div>T<sub>n+1</sub> = {nextTarget(state.T, state.k)}</div>
+              </div>
+            </GraphContainer>
+          </Panel>
+
+          {/* Bottom: Controls and Banners */}
+          <Panel>
+            <ControlsGrid>
+              <Field>
+                <Label htmlFor="stake">Bet Size</Label>
+                <StakeInputRow>
+                  <Button aria-label="Decrease stake" onClick={() => onStakeChange(state.stake - 1)} disabled={state.phase !== 'betting' || state.bankroll <= 0}>−</Button>
+                  <Input
+                    id="stake"
+                    type="number"
+                    inputMode="numeric"
+                    min={1}
+                    max={state.bankroll}
+                    value={state.stake}
+                    onChange={(e) => onStakeChange(parseInt(e.target.value || '0', 10))}
+                    aria-invalid={stakeError}
+                    aria-describedby="stake-help"
+                    disabled={state.phase !== 'betting' || state.bankroll <= 0}
+                  />
+                  <Button aria-label="Increase stake" onClick={() => onStakeChange(state.stake + 1)} disabled={state.phase !== 'betting' || state.bankroll <= 0}>+</Button>
+                </StakeInputRow>
+                <div id="stake-help" style={{ color: stakeError ? '#fecaca' : colors.subtext, minHeight: 18 }}>
+                  {stakeError ? 'Stake must be between 1 and bankroll.' : `Bankroll: ${state.bankroll}`}
+                </div>
+              </Field>
+
+              <Button $primary onClick={handleDeal} disabled={state.phase !== 'betting' || state.bankroll <= 0} aria-label="Deal">Deal</Button>
+              <Button onClick={handleHit} disabled={state.phase !== 'player' || sum(state.playerDraws) >= state.T} aria-label="Hit (H)">HIT</Button>
+              <Button onClick={handleStand} disabled={state.phase !== 'player'} aria-label="Stand (S)">STAND</Button>
+              <Button onClick={() => window.location.reload()} title="Reload Session" aria-label="Reload session">
+                <FiRefreshCcw aria-hidden />
+              </Button>
+            </ControlsGrid>
+
+            {/* Settle Banner */}
+            {state.phase === 'betting' && state.lastPayout !== undefined && (
+              <div style={{ marginTop: '1rem' }}>
+                <Banner $win={state.lastPayout > 0} $loss={state.lastPayout < 0} role="status">
+                  <BannerHeader>
+                    <div>
+                      {state.lastPayout > 0 ? '🎉 You Win!' : state.lastPayout < 0 ? '😢 You Lose' : '🤝 Push'}
+                      <div style={{ fontSize: '0.9rem', opacity: 0.9, fontWeight: 'normal' }}>
+                        {outcomeText} • Bankroll: {state.bankroll - state.lastPayout} → {state.bankroll}
+                      </div>
                     </div>
-                  </div>
-                  <Chip $pulse={!!state.nextTPreview}>
-                    Next Target: {Math.floor(state.nextTPreview ?? state.T)}
-                  </Chip>
-                </BannerHeader>
+                    <Chip $pulse={!!state.nextTPreview}>
+                      Next Target: {Math.floor(state.nextTPreview ?? state.T)}
+                    </Chip>
+                  </BannerHeader>
 
-                <HandSummary>
-                  <div>
-                    <div>Player</div>
-                    <HandTotal $highlight={state.lastPayout >= 0}>
-                      {sum(state.playerDraws)}
-                    </HandTotal>
-                    <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>
-                      {state.playerDraws.join(' + ')}
+                  <HandSummary>
+                    <div>
+                      <div>Player</div>
+                      <HandTotal $highlight={state.lastPayout >= 0}>
+                        {sum(state.playerDraws)}
+                      </HandTotal>
+                      <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>
+                        {state.playerDraws.join(' + ')}
+                      </div>
                     </div>
-                  </div>
-                  <div>vs</div>
-                  <div>
-                    <div>Dealer</div>
-                    <HandTotal $highlight={state.lastPayout <= 0 && state.lastPayout !== 0}>
-                      {sum(state.dealerDraws)}
-                    </HandTotal>
-                    <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>
-                      {state.dealerDraws.join(' + ')}
+                    <div>vs</div>
+                    <div>
+                      <div>Dealer</div>
+                      <HandTotal $highlight={state.lastPayout <= 0 && state.lastPayout !== 0}>
+                        {sum(state.dealerDraws)}
+                      </HandTotal>
+                      <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>
+                        {state.dealerDraws.join(' + ')}
+                      </div>
                     </div>
-                  </div>
-                </HandSummary>
+                  </HandSummary>
 
-                <BannerFooter>
-                  <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-                    Target was <strong>{Math.floor(state.T)}</strong>
-                  </div>
-                  <Button 
-                    $primary 
-                    onClick={() => dispatch({ type: 'nextHand' })} 
-                    aria-label="Next hand"
-                    style={{ minWidth: '140px', justifyContent: 'center' }}
-                  >
-                    Next Hand
-                  </Button>
-                </BannerFooter>
-              </Banner>
-            </div>
-          )}
-        </Panel>
-      </Main>
+                  <BannerFooter>
+                    <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                      Target was <strong>{Math.floor(state.T)}</strong>
+                    </div>
+                    <Button 
+                      $primary 
+                      onClick={() => dispatch({ type: 'nextHand' })} 
+                      aria-label="Next hand"
+                      style={{ minWidth: '140px', justifyContent: 'center' }}
+                    >
+                      Next Hand
+                    </Button>
+                  </BannerFooter>
+                </Banner>
+              </div>
+            )}
+          </Panel>
+        </Main>
 
-      {/* Out of funds overlay */}
-      {state.bankroll <= 0 && (
-        <Overlay role="dialog" aria-modal="true" aria-label="Out of KniffBucks">
-          <ModalBody>
-            <h2>Out of KniffBucks</h2>
-            <p style={{ color: colors.subtext, marginTop: 8 }}>Reload the session to reset bankroll=100, k=0, T=21.</p>
-            <div style={{ display: 'flex', gap: '0.5rem', marginTop: 12 }}>
-              <Button $primary onClick={() => window.location.reload()}>Reload Session</Button>
-            </div>
-          </ModalBody>
-        </Overlay>
-      )}
+        {/* Out of funds overlay */}
+        {state.bankroll <= 0 && (
+          <Overlay role="dialog" aria-modal="true" aria-label="Out of KniffBucks">
+            <ModalBody>
+              <h2>Out of KniffBucks</h2>
+              <p style={{ color: colors.subtext, marginTop: 8 }}>Reload the session to reset bankroll=100, k=0, T=21.</p>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: 12 }}>
+                <Button $primary onClick={() => window.location.reload()}>Reload Session</Button>
+              </div>
+            </ModalBody>
+          </Overlay>
+        )}
 
-      {/* How to Play modal */}
-      {howToOpen && (
-        <ModalOverlay onClick={() => setHowToOpen(false)} role="dialog" aria-modal="true" aria-label="How to Play">
-          <ModalBody onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ marginBottom: '0.5rem' }}>How to Play</h2>
-            <ul style={{ lineHeight: 1.5, color: colors.subtext, paddingLeft: '1rem' }}>
-              <li>Goal: Reach but do not exceed the Target T each hand. T changes across hands.</li>
-              <li>Actions: Press Deal to receive two initial cards. HIT adds a random number 1–10; STAND locks your total.</li>
-              <li>Dealer: After you stand, dealer hits to min(17, ceil(0.8*T)) and can bust over T.</li>
-              <li>Payouts: Win +stake, Loss −stake, Push 0. Exact T pays x1.5 on a non-loss.</li>
-              <li>Moving Target: Next hand's cap uses T<sub>n+1</sub> = 21 + ceil(0.5 * T<sub>n</sub> * sin(k) + 1); k is total HITs this session.</li>
-              <li>Dealer Target: Dealer shares the same target T as the player.</li>
-              <li>Session Hits k: k only increases when you HIT (not on the initial two Deal cards).</li>
-              <li>Bankroll: Start with 100 Kniff Bucks. If you hit 0, reload the session to reset.</li>
-            </ul>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
-              <Button onClick={() => setHowToOpen(false)}>Close</Button>
-            </div>
-          </ModalBody>
-        </ModalOverlay>
-      )}
+        {/* How to Play modal */}
+        {howToOpen && (
+          <ModalOverlay onClick={() => setHowToOpen(false)} role="dialog" aria-modal="true" aria-label="How to Play">
+            <ModalBody onClick={(e) => e.stopPropagation()}>
+              <h2 style={{ marginBottom: '0.5rem' }}>How to Play</h2>
+              <ul style={{ lineHeight: 1.5, color: colors.subtext, paddingLeft: '1rem' }}>
+                <li>Goal: Reach but do not exceed the Target T each hand. T changes across hands.</li>
+                <li>Actions: Press Deal to receive two initial cards. HIT adds a random number 1–10; STAND locks your total.</li>
+                <li>Dealer: After you stand, dealer hits to min(17, ceil(0.8*T)) and can bust over T.</li>
+                <li>Payouts: Win +stake, Loss −stake, Push 0. Exact T pays x1.5 on a non-loss.</li>
+                <li>Moving Target: Next hand's cap uses T<sub>n+1</sub> = 21 + ceil(0.5 * T<sub>n</sub> * sin(k) + 1); k is total HITs this session.</li>
+                <li>Dealer Target: Dealer shares the same target T as the player.</li>
+                <li>Session Hits k: k only increases when you HIT (not on the initial two Deal cards).</li>
+                <li>Bankroll: Start with 100 Kniff Bucks. If you hit 0, reload the session to reset.</li>
+              </ul>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
+                <Button onClick={() => setHowToOpen(false)}>Close</Button>
+              </div>
+            </ModalBody>
+          </ModalOverlay>
+        )}
 
-      {/* ARIA live region for outcomes */}
-      <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(1px, 1px, 1px, 1px)' }} ref={liveRef} />
-    </Page>
+        {/* ARIA live region for outcomes */}
+        <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(1px, 1px, 1px, 1px)' }} ref={liveRef} />
+      </Page>
+    </>
   );
 }
