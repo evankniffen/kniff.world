@@ -1,8 +1,8 @@
 // src/play/PlayPage.tsx
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import styled, { keyframes, css, createGlobalStyle } from 'styled-components';
-import { reducer, createInitialState } from './reducer';
-import { sum, nextTarget } from './helpers';
+import { reducer, createInitialState } from '../play/reducer';
+import { sum, nextTarget } from '../play/helpers';
 import { FiRefreshCcw, FiHelpCircle } from 'react-icons/fi';
 
 // Global style override to fix body flex centering for PlayPage
@@ -571,7 +571,7 @@ export default function PlayPage() {
                   </SumBadge>
                 </RowHeader>
                 <Draws aria-label="Player draws">
-                  {state.playerDraws.map((n, i) => (
+                  {state.playerDraws.map((n: number, i) => (
                     <DrawChip key={`p-${i}`} aria-label={`draw ${i + 1} value ${n}`}>{n}</DrawChip>
                   ))}
                 </Draws>
@@ -594,7 +594,7 @@ export default function PlayPage() {
                   </SumBadge>
                 </RowHeader>
                 <Draws aria-label="Dealer draws">
-                  {state.dealerDraws.map((n, i) => (
+                  {state.dealerDraws.map((n: number, i) => (
                     <DrawChip key={`d-${i}`}>{n}</DrawChip>
                   ))}
                 </Draws>

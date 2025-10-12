@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import './index.css'
 import App from './App.tsx'
-import PlayPage from './play/PlayPage' // make sure this exists
+import PlayPage from './play/PlayPage.tsx'
 
 const router = createBrowserRouter([
   { path: '/', element: <App /> },
