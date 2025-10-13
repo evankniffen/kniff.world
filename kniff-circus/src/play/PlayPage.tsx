@@ -1,4 +1,3 @@
-// src/play/PlayPage.tsx
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import styled, { keyframes, css, createGlobalStyle } from 'styled-components';
 import { reducer, createInitialState } from '../play/reducer';
@@ -796,7 +795,7 @@ export default function PlayPage() {
         )}
 
         {/* ARIA live region for outcomes */}
-        <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(1px, 1px, 1px, 1px)' }} ref={liveRef} />
+        <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(1px, 1px, 1px, 1px)' }} ref={liveRef}></div>
       </Page>
     </>
   );
