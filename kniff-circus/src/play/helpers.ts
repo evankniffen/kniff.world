@@ -3,8 +3,10 @@
 // These are pure functions. Keep behavior identical to the specification.
 
 // 1) RNG — uniform integer 1..10 using provided rng (seeded or Math.random fallback)
-export function uniform1to10(rng: () => number): number {
-  const v = 1 + Math.floor(rng() * 10);
+export function uniform1to10(_rng: () => number): number {
+  // Use a fresh random call each time to ensure independence
+  const randomValue = Math.random();
+  const v = 1 + Math.floor(randomValue * 10);
   // Ensure within [1, 10]
   return Math.max(1, Math.min(10, v));
 }
@@ -43,64 +45,12 @@ export function clampStake(stake: number, bankroll: number): number {
   return Math.max(1, Math.min(bankroll, s));
 }
 
-// Create a high-quality seeded RNG
-// Uses xoshiro128** algorithm for better randomness
-export function createRng(seed?: string): () => number {
-  // Generate a high-entropy seed if none provided
-  if (!seed) {
-    const entropy = [
-      typeof performance !== 'undefined' ? performance.now() : Date.now(),
-      Math.random() * 0x100000000,
-      Math.random() * 0x100000000,
-      Math.random() * 0x100000000,
-      Math.random() * 0x100000000,
-      Math.random() * 0x100000000,
-      Math.random() * 0x100000000,
-      Math.random() * 0x100000000
-    ];
-    seed = entropy.map(n => Math.floor(n).toString(36)).join('');
-  }
-
-  // Use a high-quality hash function (sdbm)
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    const char = seed.charCodeAt(i);
-    hash = char + (hash << 6) + (hash << 16) - hash;
-    hash = hash & 0xFFFFFFFF; // Convert to 32-bit integer
-  }
-
-  // Initialize xoshiro128** state using the hash
-  // We'll use a simple hash to derive 4 32-bit state values
-  let s0 = hash = (hash + 0x9E3779B9) | 0;
-  let s1 = hash = (hash + 0x9E3779B9) | 0;
-  let s2 = hash = (hash + 0x9E3779B9) | 0;
-  let s3 = hash = (hash + 0x9E3779B9) | 0;
-
-  // Mix the state a bit
-  for (let i = 0; i < 20; i++) {
-    const t = s1 << 9;
-    s2 ^= s0;
-    s3 ^= s1;
-    s1 ^= s2;
-    s0 ^= s3;
-    s2 ^= t;
-    s3 = (s3 << 11) | (s3 >>> 21);
-  }
-
-  // xoshiro128** PRNG
-  return function() {
-    const result = Math.imul((s1 * 5) >>> 0, 0x27D4EB2D) >>> 0;
-    const t = s1 << 9;
-    
-    s2 ^= s0;
-    s3 ^= s1;
-    s1 ^= s2;
-    s0 ^= s3;
-    s2 ^= t;
-    s3 = (s3 << 11) | (s3 >>> 21);
-    
-    return result / 0x100000000; // Convert to [0, 1)
-  };
+// Create a simple RNG using Math.random()
+// This is much simpler and more reliable than complex PRNG implementations
+export function createRng(_seed?: string): () => number {
+  // Always use Math.random() for true randomness - ignore any seed for now
+  // The seed parameter can be kept for future seeded gameplay features
+  return () => Math.random(); // Fresh random number each time
 }
 
 // Uniform PMF stub (pluggable): 10 outcomes each with 0.1

@@ -443,7 +443,7 @@ function useActionDebounce(ms = 220) {
 
 export default function PlayPage() {
   const [state, dispatch] = useReducer(reducer, undefined, () => {
-    const initialState = createInitialState('100');
+    const initialState = createInitialState(); // Remove hardcoded seed to get random cards every time
     return {
       ...initialState,
       playerTotal: 0,
@@ -787,7 +787,7 @@ export default function PlayPage() {
               <ul style={{ lineHeight: 1.5, color: colors.subtext, paddingLeft: '1rem' }}>
                 <li><strong>Goal:</strong> Each round has a target number. Get as close as you can <em>without going over</em>. The target changes every round.</li>
                 <li><strong>Actions:</strong> <em>Deal</em> gives you two starting numbers. <em>Hit</em> adds a random 1–10. <em>Stand</em> locks your total.</li>
-                <li><strong>Dealer:</strong> After you Stand, the dealer draws until they reach roughly 80% of that round’s target. If they go over the target, they bust.</li>
+                <li><strong>Dealer:</strong> After you Stand, the dealer draws until they reach roughly 80% of that round’s Target. If they go over the target, they bust.</li>
                 <li><strong>Who wins:</strong> Closer to the target without going over wins. A tie is a push.</li>
                 <li><strong>Payouts:</strong> Win: you gain your stake. Loss: you lose your stake. Push: no change. Hit the exact target for a 1.5× payout on that win.</li>
                 <li><strong>Moving target:</strong> After each hand, the next round’s target shifts around 21 and is influenced by how many times you’ve pressed <em>Hit</em> this session (it “wiggles” in a repeating pattern).</li>
