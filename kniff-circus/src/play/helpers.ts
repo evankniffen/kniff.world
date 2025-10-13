@@ -20,7 +20,7 @@ export function sum(arr: number[]): number {
 // nextTarget(T, k):
 //   return 21 + 0.5 * T * sin(k) + 1
 export function nextTarget(T: number, k: number): number {
-  return 21 + 0.5 * T * Math.sin(k) + 1;
+  return 20 + 0.5 * T * Math.sin(k) + 1;
 }
 
 // 4) Dealer minimum threshold
