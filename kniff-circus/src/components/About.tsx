@@ -138,20 +138,20 @@ export const About: React.FC = () => {
     {
       id: 'the-goat',
       title: 'Evan Kniffen',
-      subtitle: 'Local legend',
-      description: 'I\'m a lifelong student of the game who builds cool stuff, solves integrals, and plays a lot of blackjack.'
+      subtitle: 'College Station, TX | kniff@tamu.edu',
+      description: 'Mathematics PhD student at Texas A&M University. I build cool stuff, solve integrals, and play a lot of blackjack.'
     },
     {
       id: 'edu',
       title: 'Education',
-      subtitle: 'B.S. in Mathematics - Texas A&M University',
-      description: '2024-2026, GPA: 3.61, w/ honors. Currently submitting PhD applications for Fall 2026.'
+      subtitle: 'Ph.D. in Mathematics - Texas A&M University',
+      description: 'Starting Fall 2026. B.S. in Mathematics w/ honors (Aug 2024 -- May 2026). Overall GPA: 3.68; Math Dept. GPA: 3.93. Selected Coursework: Stochastic Calculus, Measure Theory, Combinatorics, Modern Algebra II, Mathematical Probability, Operations Research (all A\'s). Grand Oaks High School: GPA 4.00 UW / 5.82 W, SAT 1580 (800 Math, 780 Verbal).'
     },
     {
       id: 'passions',
-      title: 'Interests & Passions',
-      subtitle: 'Stochastic Calculus, Probability, Measure Theory, Machine Learning, Brownian Motion, Gambling',
-      description: 'I love to solve and write integrals, and can frequently be found doomscrolling on AoPS or MSE.'
+      title: 'Research Interests',
+      subtitle: 'Probability Theory, Stochastic Analysis, Algebraic Combinatorics',
+      description: 'Markov processes, SDEs, martingales, Brownian motion, Itô calculus; machine learning and algorithm analysis; random walks; high-dimensional probability and random matrices; permutation patterns; combinatorial game theory.'
     }
   ];
 
@@ -218,11 +218,6 @@ export const About: React.FC = () => {
                   }}
                 >
                   <StyledDetailHeader>
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <Dot style={{ background: '#f00' }}/>
-                      <Dot style={{ background: '#ff0' }}/>
-                      <Dot style={{ background: '#0f0' }}/>
-                    </div>
                     <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
                   </StyledDetailHeader>
                   <StyledDetailBody>

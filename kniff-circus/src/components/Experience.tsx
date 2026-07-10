@@ -32,6 +32,18 @@ const Experience: React.FC = () => {
 
   const experiences = [
     {
+      id: 'rice-elite',
+      company: 'Rice University',
+      role: 'ELITE Instructor',
+      date: 'May 2026 - Present',
+      description: 'Curriculum development and teaching of summer classes for hundreds of students in engineering and mathematics through the Rice Center for Engineering Leadership',
+      technologies: ['Deep Learning', 'C++', 'Rocket Science', 'Machine Learning'],
+      details: [
+        'Deep Learning: Covering fundamental ML and AI concepts, including CNN/ANNs, backpropagation, supervised learning (KNN, SVM, NB), and optimization (SGD, Bayesian, Genetic)',
+        'C++ for Human Spaceflight: Highlighting mathematics used in physical representations for computational rocket science (Kepler\'s Laws, orbital mechanics, elliptic orbits), with an introduction to C++'
+      ]
+    },
+    {
       id: 'novvia',
       company: 'Novvia Group',
       role: 'Pricing Analyst Intern',
@@ -147,11 +159,6 @@ const Experience: React.FC = () => {
                     }}
                   >
                     <StyledDetailHeader>
-                      <div style={{ display: 'flex', gap: '6px' }}>
-                        <Dot style={{ background: '#f00' }}/>
-                        <Dot style={{ background: '#ff0' }}/>
-                        <Dot style={{ background: '#0f0' }}/>
-                      </div>
                       <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
                     </StyledDetailHeader>
                     <StyledDetailBody>
