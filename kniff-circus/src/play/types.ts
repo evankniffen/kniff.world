@@ -13,6 +13,7 @@ export interface GameState {
   k: number;             // cumulative HITs across this session
   playerDraws: number[];
   dealerDraws: number[];
+  dealerVisible: boolean[];  // tracks which dealer cards are visible (hole card is false)
   outcome?: HandOutcome;
   lastPayout?: number;   // signed integer delta to bankroll
   nextTPreview?: number; // computed at settle; used on next Deal

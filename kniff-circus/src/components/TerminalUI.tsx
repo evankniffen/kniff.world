@@ -62,7 +62,7 @@ export const StyledDetailModal = styled(motion.div)`
   background: rgba(10, 22, 10, 0.98);
   border: 1px solid rgba(0, 255, 0, 0.5);
   border-radius: 10px;
-  padding: 1.75rem;
+  padding: 0.75rem 1.75rem 1.75rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 24px rgba(0, 255, 0, 0.18);
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -79,7 +79,7 @@ export const StyledDetailModal = styled(motion.div)`
     overflow: hidden; /* delegate scrolling to body on mobile */
     max-width: calc(100% - 2rem);
     max-height: 88dvh;
-    padding: 1.25rem;
+    padding: 0.625rem 1.25rem 1.25rem;
     margin: 0.75rem;
     width: 100%;
   }
@@ -92,33 +92,44 @@ export const StyledDetailModal = styled(motion.div)`
 
 export const CloseButton = styled.button`
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  background: none;
-  border: none;
+  top: 0.25rem;
+  right: 0.25rem;
+  background: rgba(0, 30, 0, 0.5);
+  border: 1px solid rgba(0, 255, 0, 0.3);
   color: #0F0;
-  font-size: 1.8rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.3rem 0.5rem;
   line-height: 1;
   border-radius: 4px;
   transition: all 0.2s ease;
   z-index: 10;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   
   &:hover, &:focus {
     color: #fff;
-    background: rgba(0, 255, 0, 0.1);
+    background: rgba(0, 255, 0, 0.15);
+    border-color: rgba(0, 255, 0, 0.6);
     outline: none;
-    box-shadow: 0 0 0 2px #0F0;
+    box-shadow: 0 0 0 2px rgba(0, 255, 0, 0.3);
   }
   
   &:active {
     transform: scale(0.95);
+    background: rgba(0, 255, 0, 0.2);
   }
   
   @media (max-width: 768px) {
-    font-size: 2rem;
-    padding: 1rem;
+    font-size: 1.25rem;
+    padding: 0.4rem 0.6rem;
+    top: 0.3rem;
+    right: 0.3rem;
+    min-width: 36px;
+    min-height: 36px;
   }
 `;
 
@@ -262,17 +273,16 @@ export const StyledDetailHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: -2.5rem -2.5rem 1.5rem;
-  padding: 1rem 1.5rem;
-  background: rgba(0, 30, 0, 0.3);
-  border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+  margin: -1.75rem -1.75rem 0.5rem;
+  padding: 0.5rem 1.75rem;
+  background: rgba(0, 30, 0, 0.4);
+  border-bottom: 1px solid rgba(0, 255, 0, 0.3);
   position: sticky;
   top: 0;
-  z-index: 2; /* Above the modal content */
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  min-height: 3rem;
   
   &::after {
     content: '';
@@ -285,8 +295,9 @@ export const StyledDetailHeader = styled.div`
   }
   
   @media (max-width: 768px) {
-    margin: -1.2rem -1.2rem 1.5rem;
-    padding: 0.8rem 1.2rem;
+    margin: -1.5rem -1.5rem 0.4rem;
+    padding: 0.4rem 1.5rem;
+    min-height: 2.75rem;
   }
 `;
 
@@ -300,15 +311,17 @@ export const StyledDetailBody = styled.div`
   max-height: 100%;
   line-height: 1.75;
   font-size: 1rem;
+  padding-right: 0.5rem;
+  
   h3 {
     color: #0F0;
-    margin: 1.5rem 0 0.5rem;
+    margin: 1.5rem 0 0.75rem;
     font-size: 1.35rem;
   }
   
   .subtitle {
     color: #aaa;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     font-size: 1rem;
   }
   
@@ -319,11 +332,12 @@ export const StyledDetailBody = styled.div`
   }
   
   li {
-    margin: 0.35rem 0;
+    margin: 0.5rem 0;
+    line-height: 1.6;
   }
   
   p {
-    margin: 0.4rem 0 0.7rem;
+    margin: 0.5rem 0 0.75rem;
   }
   
   code, pre {
@@ -336,18 +350,58 @@ export const StyledDetailBody = styled.div`
     color: #0F0;
   }
   
+  .details-list {
+    margin: 0.75rem 0;
+    padding-left: 1.25rem;
+  }
+  
+  button {
+    padding: 0.625rem 1.25rem;
+    margin: 0.5rem 0;
+    background: rgba(0, 30, 0, 0.4);
+    border: 1px solid rgba(0, 255, 0, 0.4);
+    border-radius: 6px;
+    color: #0F0;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    
+    &:hover {
+      background: rgba(0, 255, 0, 0.15);
+      border-color: rgba(0, 255, 0, 0.6);
+      color: #fff;
+    }
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    @media (max-width: 768px) {
+      padding: 0.75rem 1.5rem;
+      min-height: 48px;
+      font-size: 0.95rem;
+    }
+  }
+  
   @media (max-width: 768px) {
     font-size: 1rem;
     line-height: 1.7;
+    padding-right: 0.25rem;
     
     h3 {
-      font-size: 1.4rem;
-      margin: 1rem 0 0.8rem;
+      font-size: 1.25rem;
+      margin: 1.25rem 0 0.75rem;
     }
     
     .subtitle {
-      font-size: 1rem;
-      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+    
+    li {
+      margin: 0.6rem 0;
     }
   }
 `;
@@ -488,21 +542,22 @@ export const TerminalItem = styled.li`
 export const GitHubButton = styled.a`
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
-  padding: 0.5rem 1rem;
-  margin: 1.2rem 0 0.5rem;
-  background: rgba(15, 30, 15, 0.3);
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0 1rem;
+  background: rgba(15, 30, 15, 0.4);
   border: 1px solid rgba(0, 255, 0, 0.4);
-  border-radius: 4px;
+  border-radius: 6px;
   color: #0F0;
   font-family: 'Source Code Pro', monospace;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: 44px;
   
   &::before {
     content: '';
@@ -517,8 +572,8 @@ export const GitHubButton = styled.a`
   }
   
   .github-icon {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
     transition: transform 0.2s ease;
   }
@@ -534,7 +589,7 @@ export const GitHubButton = styled.a`
   }
   
   &:hover {
-    background: rgba(25, 50, 25, 0.4);
+    background: rgba(25, 50, 25, 0.5);
     border-color: rgba(0, 255, 0, 0.7);
     color: #fff;
     text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
@@ -564,5 +619,17 @@ export const GitHubButton = styled.a`
   &:focus-visible {
     outline: 2px solid rgba(0, 255, 0, 0.6);
     outline-offset: 2px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0.875rem 1.5rem;
+    margin: 1.25rem 0 1rem;
+    font-size: 1rem;
+    min-height: 48px;
+    
+    .github-icon {
+      width: 20px;
+      height: 20px;
+    }
   }
 `;

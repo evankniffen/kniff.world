@@ -1,8 +1,7 @@
-// src/play/PlayPage.tsx
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import styled, { keyframes, css, createGlobalStyle } from 'styled-components';
-import { reducer, createInitialState } from './reducer';
-import { sum, nextTarget } from './helpers';
+import { reducer, createInitialState } from '../play/reducer';
+import { sum, nextTarget } from '../play/helpers';
 import { FiRefreshCcw, FiHelpCircle } from 'react-icons/fi';
 
 // Global style override to fix body flex centering for PlayPage
@@ -10,6 +9,7 @@ const PlayPageGlobalStyle = createGlobalStyle`
   body {
     display: block !important;
     place-items: auto !important;
+    font-family: 'Courier New', Courier, monospace !important;
   }
 `;
 
@@ -186,7 +186,7 @@ const Draws = styled.div`
   gap: 0.4rem;
 `;
 
-const DrawChip = styled.div`
+const DrawChip = styled.div<{ $isHidden?: boolean }>`
   min-width: 32px;
   height: 32px;
   padding: 0 0.4rem;
@@ -195,9 +195,11 @@ const DrawChip = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.05);
+  background: ${p => (p.$isHidden ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)')};
   animation: ${pop} 180ms ease;
   font-variant-numeric: tabular-nums;
+  color: ${p => (p.$isHidden ? colors.subtext : colors.text)};
+  font-weight: ${p => (p.$isHidden ? 'normal' : 'bold')};
 `;
 
 const SumBadge = styled.div`
@@ -312,6 +314,8 @@ const Input = styled.input`
   border-radius: 8px;
   padding: 0.65rem 0.75rem;
   min-height: 44px;
+  font-size: 1.2rem;
+  font-weight: 700;
 `;
 
 const Banner = styled.div<{ $win?: boolean; $loss?: boolean }>`
@@ -439,13 +443,14 @@ function useActionDebounce(ms = 220) {
 
 export default function PlayPage() {
   const [state, dispatch] = useReducer(reducer, undefined, () => {
-    const initialState = createInitialState('100');
+    const initialState = createInitialState(); // Remove hardcoded seed to get random cards every time
     return {
       ...initialState,
       playerTotal: 0,
       dealerTotal: 0,
       playerDraws: [],
       dealerDraws: [],
+      dealerVisible: [],
       T: 21,
       k: 0,
       stake: 10,
@@ -520,7 +525,7 @@ export default function PlayPage() {
   }, [state.phase, state.lastPayout]);
 
   const playerTotal = useMemo(() => sum(state.playerDraws), [state.playerDraws]);
-  const dealerTotal = useMemo(() => sum(state.dealerDraws), [state.dealerDraws]);
+  const dealerTotal = useMemo(() => sum(state.dealerDraws.filter((_, i) => state.dealerVisible[i])), [state.dealerDraws, state.dealerVisible]);
 
   // ... (rest of the code remains the same)
 
@@ -571,7 +576,7 @@ export default function PlayPage() {
                   </SumBadge>
                 </RowHeader>
                 <Draws aria-label="Player draws">
-                  {state.playerDraws.map((n, i) => (
+                  {state.playerDraws.map((n: number, i) => (
                     <DrawChip key={`p-${i}`} aria-label={`draw ${i + 1} value ${n}`}>{n}</DrawChip>
                   ))}
                 </Draws>
@@ -594,8 +599,10 @@ export default function PlayPage() {
                   </SumBadge>
                 </RowHeader>
                 <Draws aria-label="Dealer draws">
-                  {state.dealerDraws.map((n, i) => (
-                    <DrawChip key={`d-${i}`}>{n}</DrawChip>
+                  {state.dealerDraws.map((n: number, i) => (
+                    <DrawChip key={`d-${i}`} $isHidden={!state.dealerVisible[i]}>
+                      {state.dealerVisible[i] ? n : '?'}
+                    </DrawChip>
                   ))}
                 </Draws>
               </Row>
@@ -663,8 +670,7 @@ export default function PlayPage() {
                 fontSize: '0.8rem',
                 marginTop: '0.5rem'
               }}>
-                <div>k = {state.k}</div>
-                <div>T<sub>n+1</sub> = {nextTarget(state.T, state.k)}</div>
+                <div>Total Hits = {state.k}</div>
               </div>
             </GraphContainer>
           </Panel>
@@ -691,7 +697,7 @@ export default function PlayPage() {
                   <Button aria-label="Increase stake" onClick={() => onStakeChange(state.stake + 1)} disabled={state.phase !== 'betting' || state.bankroll <= 0}>+</Button>
                 </StakeInputRow>
                 <div id="stake-help" style={{ color: stakeError ? '#fecaca' : colors.subtext, minHeight: 18 }}>
-                  {stakeError ? 'Stake must be between 1 and bankroll.' : `Bankroll: ${state.bankroll}`}
+                  {stakeError ? 'Stake must be between 1 and bankroll.' : `Total KniffBucks: ${state.bankroll}`}
                 </div>
               </Field>
 
@@ -709,9 +715,9 @@ export default function PlayPage() {
                 <Banner $win={state.lastPayout > 0} $loss={state.lastPayout < 0} role="status">
                   <BannerHeader>
                     <div>
-                      {state.lastPayout > 0 ? '🎉 You Win!' : state.lastPayout < 0 ? '😢 You Lose' : '🤝 Push'}
+                      {state.lastPayout > 0 ? 'You Win!!!!!1!!!1!' : state.lastPayout < 0 ? 'You Lose.' : 'Push'}
                       <div style={{ fontSize: '0.9rem', opacity: 0.9, fontWeight: 'normal' }}>
-                        {outcomeText} • Bankroll: {state.bankroll - state.lastPayout} → {state.bankroll}
+                        {outcomeText} • KniffBucks: {state.bankroll - state.lastPayout} → {state.bankroll}
                       </div>
                     </div>
                     <Chip $pulse={!!state.nextTPreview}>
@@ -779,14 +785,15 @@ export default function PlayPage() {
             <ModalBody onClick={(e) => e.stopPropagation()}>
               <h2 style={{ marginBottom: '0.5rem' }}>How to Play</h2>
               <ul style={{ lineHeight: 1.5, color: colors.subtext, paddingLeft: '1rem' }}>
-                <li>Goal: Reach but do not exceed the Target T each hand. T changes across hands.</li>
-                <li>Actions: Press Deal to receive two initial cards. HIT adds a random number 1–10; STAND locks your total.</li>
-                <li>Dealer: After you stand, dealer hits to min(17, ceil(0.8*T)) and can bust over T.</li>
-                <li>Payouts: Win +stake, Loss −stake, Push 0. Exact T pays x1.5 on a non-loss.</li>
-                <li>Moving Target: Next hand's cap uses T<sub>n+1</sub> = 21 + ceil(0.5 * T<sub>n</sub> * sin(k) + 1); k is total HITs this session.</li>
-                <li>Dealer Target: Dealer shares the same target T as the player.</li>
-                <li>Session Hits k: k only increases when you HIT (not on the initial two Deal cards).</li>
-                <li>Bankroll: Start with 100 Kniff Bucks. If you hit 0, reload the session to reset.</li>
+                <li><strong>Goal:</strong> Each round has a target number. Get as close as you can <em>without going over</em>. The target changes every round.</li>
+                <li><strong>Actions:</strong> <em>Deal</em> gives you two starting numbers. <em>Hit</em> adds a random 1–10. <em>Stand</em> locks your total.</li>
+                <li><strong>Dealer:</strong> After you Stand, the dealer draws until they reach roughly 80% of that round’s Target. If they go over the target, they bust.</li>
+                <li><strong>Who wins:</strong> Closer to the target without going over wins. A tie is a push.</li>
+                <li><strong>Payouts:</strong> Win: you gain your stake. Loss: you lose your stake. Push: no change. Hit the exact target for a 1.5× payout on that win.</li>
+                <li><strong>Moving target:</strong> After each hand, the next round’s target shifts around 21 and is influenced by how many times you’ve pressed <em>Hit</em> this session (it “wiggles” in a repeating pattern).</li>
+                <li><strong>Shared target:</strong> You and the dealer always use the same target each round.</li>
+                <li><strong>What counts as a Hit:</strong> Only presses of <em>Hit</em>. The two cards from <em>Deal</em> don’t count.</li>
+                <li><strong>Bankroll:</strong> Start with 100 Kniff Bucks. If you reach 0, reload the session to reset.</li>
               </ul>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
                 <Button onClick={() => setHowToOpen(false)}>Close</Button>
@@ -796,7 +803,7 @@ export default function PlayPage() {
         )}
 
         {/* ARIA live region for outcomes */}
-        <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(1px, 1px, 1px, 1px)' }} ref={liveRef} />
+        <div aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(1px, 1px, 1px, 1px)' }} ref={liveRef}></div>
       </Page>
     </>
   );

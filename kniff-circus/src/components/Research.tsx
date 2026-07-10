@@ -78,6 +78,51 @@ const Research: React.FC = () => {
 
   const [researchItems] = useState<ResearchItem[]>([
     {
+      id: 'pyranim',
+      title: 'Pyranim: A Combinatorial Game of Doom and Despair',
+      authors: 'E. Kniffen, Y. Binyamin',
+      year: '2026',
+      abstract: 'Designing and analyzing a new impartial, Nim-adjacent chip-removal game via isomorphisms to Nim group structures. Using explicit bijections from symmetric Dyck paths to permutation involutions (building on work of Sergi Elizalde and Krattenthaler) to bound the number of distinct game states up to isomorphism. Developing a Python/Tkinter analysis tool that live-tracks Dyck paths, 132-avoiding permutations, and Sprague–Grundy nimbers for arbitrary starting positions to validate optimal play strategies.',
+      technologies: ['Combinatorial Game Theory', 'Python', 'Tkinter', 'Permutation Patterns', 'Dyck Paths', 'Sprague-Grundy Theory'],
+      details: [
+        'Designing and analyzing a new impartial, Nim-adjacent chip-removal game via isomorphisms to Nim group structures',
+        'Using explicit bijections from symmetric Dyck paths to permutation involutions to bound the number of distinct game states up to isomorphism',
+        'Developing a Python/Tkinter analysis tool that live-tracks Dyck paths, 132-avoiding permutations, and Sprague–Grundy nimbers for arbitrary starting positions',
+        'Joint work with Yoav Binyamin'
+      ]
+    },
+    {
+      id: 'brd-stochastic',
+      title: 'Stochastic Modeling of Bovine Respiratory Disease',
+      authors: 'E. Kniffen, PI: A. Adekunle',
+      year: '2025',
+      abstract: 'Formulated a discrete-time stochastic model on a SEIQRS state space with a CTMC sidecar; derived per-step transition kernels via Markov hazards and explicit competing-risk splits for I and Q outflows. Gave a mean-reverting SDE for weight toward the Gompertz target weight function and checked linear-growth & global-Lipschitz conditions to ensure existence/uniqueness of a strong solution; related the Euler–Maruyama discretization to the ABM weight recursion and its geometric mean-reversion. Specified population draws (binomial flows) consistent with the generator, clarifying the CTMC→DTMC sampling scheme and providing a rate-consistent pathwise construction for inference.',
+      technologies: ['Stochastic Modeling', 'SDEs', 'Markov Processes', 'Agent-Based Modeling', 'NetLogo'],
+      details: [
+        'Formulated a discrete-time stochastic model on a SEIQRS state space with a CTMC sidecar',
+        'Derived per-step transition kernels via Markov hazards and explicit competing-risk splits',
+        'Gave a mean-reverting SDE for weight toward the Gompertz target weight function',
+        'Checked linear-growth & global-Lipschitz conditions to ensure existence/uniqueness of a strong solution',
+        'Texas A&M AgriLife Research'
+      ],
+      pdfUrl: cattlePdf
+    },
+    {
+      id: 'brd-ml',
+      title: 'Machine Learning-Based Risk Prediction of Bovine Respiratory Disease',
+      authors: 'E. Kniffen, PI: K. Kaniyamattam',
+      year: '2025',
+      abstract: 'Derived and interpreted evaluation metrics and baselines in probabilistic methods, including ROC/AUC, Brier scores and their optimal constant baseline, and imbalance-aware majority-class accuracy to separate discrimination from calibration. Provided mathematical definitions for the classifiers (LR, SVM, KNN, RF, XGBoost), including the logistic loss, second-order gradient/Hessian leaf updates and split-gain formula for XGBoost, and tree-ensemble feature importance and one-factor partial dependence.',
+      technologies: ['Machine Learning', 'XGBoost', 'Random Forest', 'SVM', 'Logistic Regression', 'KNN'],
+      details: [
+        'Derived and interpreted evaluation metrics and baselines in probabilistic methods',
+        'Including ROC/AUC, Brier scores and their optimal constant baseline',
+        'Imbalance-aware majority-class accuracy to separate discrimination from calibration',
+        'Provided mathematical definitions for classifiers (LR, SVM, KNN, RF, XGBoost)',
+        'Texas A&M AgriLife Research'
+      ]
+    },
+    {
       id: 'spacecraft',
       title: 'Physics-Informed Stochastic Time Series Generation and ML for Anomaly Detection in Spacecraft Telemetry',
       authors: 'E. Kniffen',
@@ -91,20 +136,6 @@ const Research: React.FC = () => {
         'Developed for Berkeley Physics REYES Program'
       ],
       pdfUrl: reyesPdf
-    },
-    {
-      id: 'moooo',
-      title: 'Modeling Beef Cattle Growth and Economic Value under Morbidity',
-      authors: 'A. Adekunle, E. Kniffen (WIP)',
-      year: '2025',
-      abstract: 'Accurate simulation of beef cattle growth and economic outcomes is essential for optimizing production systems and evaluating the impact of disease management strategies. We present an agent-based modeling framework, implemented in NetLogo, that explicitly tracks individual animal variables including age (age), liveweight (weightlbs), health state (isInfected, timesInfected), and economic value (valueusd). Growth is modeled using three alternative sigmoidal functions: Gompertz, Logistic, and von Bertalanffy; each one with full parameterization and rationale. A phase-specific valuation function maps liveweight to market value across production stages (price-CC, price-ST, price-FL), supporting sensitivity to price volatility and net present value (NPV) discounting. The morbidity submodel quantifies both the direct and proportional impacts of bovine respiratory disease (BRD) events on average daily gain and cumulative costs, using parameter estimates from empirical studies. We demonstrate model selection, parameter calibration, and scenario analysis in a simulated herd of 100 calves run over a 540-day production cycle, supporting detailed experiments for disease, price, and management interventions.',
-      technologies: ['NetLogo', 'Python', 'Stochastic Modeling', 'Agent-Based Modeling'],
-      details: [
-        'Developed agent-based model for cattle production',
-        'Implemented stochastic and exponential growth models',
-        'Developed for Texas A&M University Department of Animal Science'
-      ],
-      pdfUrl: cattlePdf
     }
   ].map((item, index) => ({ ...item, delay: index * 0.1, pdfFile: null })));
 
@@ -175,11 +206,6 @@ const Research: React.FC = () => {
                   exit={{ scale: 0.95, opacity: 0, y: 20 }}
                 >
                   <StyledDetailHeader>
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <Dot style={{ background: '#f00' }}/>
-                      <Dot style={{ background: '#ff0' }}/>
-                      <Dot style={{ background: '#0f0' }}/>
-                    </div>
                     <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
                   </StyledDetailHeader>
                   <StyledDetailBody>

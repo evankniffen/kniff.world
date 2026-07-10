@@ -162,11 +162,6 @@ export const Projects: React.FC = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <StyledDetailHeader>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <Dot style={{ background: '#f00' }}/>
-                    <Dot style={{ background: '#ff0' }}/>
-                    <Dot style={{ background: '#0f0' }}/>
-                  </div>
                   <CloseButton onClick={() => setShowDetail(null)}>×</CloseButton>
                 </StyledDetailHeader>
                 <StyledDetailBody>

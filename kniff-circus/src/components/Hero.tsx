@@ -371,7 +371,7 @@ export const Hero: React.FC = () => {
                         <CommandText>contact</CommandText>
                         <CommandDesc>- Get in touch</CommandDesc>
                       </MenuItem>
-                      <MenuItem onClick={() => (window.location.href = '/play')}>
+                      <MenuItem as="a" href="/play/">
                         <CommandText>play</CommandText>
                         <CommandDesc>- Play Moving-Cap Blackjack</CommandDesc>
                       </MenuItem>

@@ -33,6 +33,7 @@ export function createInitialState(seed?: string): GameState {
     k: 0,
     playerDraws: [],
     dealerDraws: [],
+    dealerVisible: [],
     outcome: undefined,
     lastPayout: 0,
     nextTPreview: undefined,
@@ -79,7 +80,9 @@ export function reducer(state: GameState, action: Action): GameState {
       const initialDraws = [c1, c2];
       const initialTotal = sum(initialDraws);
       if (initialTotal > nextT) {
-        // Immediate bust on deal
+        // Immediate bust on deal - still deal dealer cards so player can see them
+        const dealerCard1 = uniform1to10(state.rng);
+        const dealerCard2 = uniform1to10(state.rng);
         const outcome = 'playerBust';
         const payout = computePayoutInt(state.stake, outcome, false);
         return {
@@ -87,7 +90,8 @@ export function reducer(state: GameState, action: Action): GameState {
           T: nextT,
           phase: 'betting',
           playerDraws: initialDraws,
-          dealerDraws: [],
+          dealerDraws: [dealerCard1, dealerCard2],
+          dealerVisible: [true, true], // Both cards visible since hand is over
           outcome,
           lastPayout: payout,
           bankroll: state.bankroll + payout,
@@ -95,12 +99,16 @@ export function reducer(state: GameState, action: Action): GameState {
           stake: clampStake(state.stake, state.bankroll + payout),
         };
       }
+      // Deal two cards to dealer: first is hole card (hidden), second is visible
+      const dealerCard1 = uniform1to10(state.rng);
+      const dealerCard2 = uniform1to10(state.rng);
       return {
         ...state,
         T: nextT,
         phase: 'player',
         playerDraws: initialDraws,
-        dealerDraws: [],
+        dealerDraws: [dealerCard1, dealerCard2],
+        dealerVisible: [false, true], // First card hidden (hole card), second visible
         outcome: undefined,
         lastPayout: 0,
         nextTPreview: undefined,
@@ -120,6 +128,7 @@ export function reducer(state: GameState, action: Action): GameState {
           ...state,
           k,
           playerDraws,
+          dealerVisible: state.dealerDraws.map(() => true), // Reveal all dealer cards on player bust
           outcome,
           lastPayout: payout,
           bankroll: state.bankroll + payout,
@@ -131,13 +140,22 @@ export function reducer(state: GameState, action: Action): GameState {
     }
     case 'stand': {
       if (state.phase !== 'player') return state;
-      // Start dealer phase, dealer plays via dealerTick timing
-      return { ...state, phase: 'dealer', dealerDraws: [] };
+      // Start dealer phase - dealer already has cards from deal, just change phase
+      return { ...state, phase: 'dealer' };
     }
     case 'dealerTick': {
       if (state.phase !== 'dealer') return state;
+
+      // If hole card is still hidden, reveal it first
+      if (state.dealerDraws.length > 0 && !state.dealerVisible[0]) {
+        const dealerVisible = [...state.dealerVisible];
+        dealerVisible[0] = true; // Reveal the hole card
+        return { ...state, dealerVisible };
+      }
+
       const d = uniform1to10(state.rng);
       const dealerDraws = [...state.dealerDraws, d];
+      const dealerVisible = [...state.dealerVisible, true]; // New cards are always visible
       const dealerTotal = sum(dealerDraws);
       const playerTotal = sum(state.playerDraws);
       const threshold = dealerMin(state.T);
@@ -147,7 +165,8 @@ export function reducer(state: GameState, action: Action): GameState {
         const payout = computePayoutInt(state.stake, outcome, playerTotal === state.T);
         return { 
           ...state, 
-          dealerDraws, 
+          dealerDraws,
+          dealerVisible,
           outcome, 
           lastPayout: payout,
           bankroll: state.bankroll + payout,
@@ -155,7 +174,7 @@ export function reducer(state: GameState, action: Action): GameState {
           phase: 'betting' 
         };
       }
-      return { ...state, dealerDraws };
+      return { ...state, dealerDraws, dealerVisible };
     }
     case 'settle': {
       if (state.phase !== 'settle') return state;
@@ -185,16 +204,19 @@ export function reducer(state: GameState, action: Action): GameState {
       const initialDraws = [c1, c2];
       const initialTotal = sum(initialDraws);
       
-      // Check for immediate bust
       if (initialTotal > nextT) {
         const outcome = 'playerBust';
         const payout = computePayoutInt(state.stake, outcome, false);
+        // Deal dealer cards even on immediate bust so player can see them
+        const dealerCard1 = uniform1to10(state.rng);
+        const dealerCard2 = uniform1to10(state.rng);
         return {
           ...state,
           T: nextT,
           phase: 'betting',
           playerDraws: initialDraws,
-          dealerDraws: [],
+          dealerDraws: [dealerCard1, dealerCard2],
+          dealerVisible: [true, true], // Both cards visible since hand is over
           outcome,
           lastPayout: payout,
           bankroll: state.bankroll + payout,
@@ -203,13 +225,18 @@ export function reducer(state: GameState, action: Action): GameState {
         };
       }
       
+      // Deal two cards to dealer: first is hole card (hidden), second is visible
+      const dealerCard1 = uniform1to10(state.rng);
+      const dealerCard2 = uniform1to10(state.rng);
+      
       // No immediate bust, start player's turn
       return {
         ...state,
         T: nextT,
         phase: 'player',
         playerDraws: initialDraws,
-        dealerDraws: [],
+        dealerDraws: [dealerCard1, dealerCard2],
+        dealerVisible: [false, true], // First card hidden (hole card), second visible
         outcome: undefined,
         lastPayout: undefined,
         nextTPreview: undefined,

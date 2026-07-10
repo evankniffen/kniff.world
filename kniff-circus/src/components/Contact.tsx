@@ -273,7 +273,7 @@ export const Contact: React.FC = () => {
       </WindowHeader>
       <WindowBody>
         <div style={{ position: 'relative' }}>
-          <Prompt>Kniff@tamu:~/contact$</Prompt> connect
+          <Prompt>kniff@tamu:~/contact$</Prompt> connect
           <span className="blinking-cursor">_</span>
           
           <ContactGrid>
